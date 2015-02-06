@@ -3,7 +3,7 @@
 #
 require 'net/http'
 require 'tempfile'
-RAW_URL = 'https://raw.githubusercontent.com/ruby/ruby/trunk/benchmark/bm_'
+RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/ruby/benchmarks/bm_'
 
 first = true
 
