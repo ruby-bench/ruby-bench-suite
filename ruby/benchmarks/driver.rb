@@ -164,7 +164,7 @@ class BenchmarkDriver
         'benchmark_type[script_url]' => "#{RAW_URL}#{v}.rb",
         "benchmark_run[result][#{v}]" => rets.first,
         'benchmark_run[environment]' => @execs.map { |(_,v)| v }.first,
-        'commit_hash' => ENV['RUBY_COMMIT_HASH'],
+        'commit_hash' => ENV['RUBY_COMMIT_HASH'] || ENV['RUBY_VERSION'],
         'repo' => 'ruby',
         'organization' => 'tgxworld'
       })
