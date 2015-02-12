@@ -157,16 +157,22 @@ class BenchmarkDriver
       request = Net::HTTP::Post.new('/benchmark_runs')
       request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
 
+      initiator_hash = {}
+      if(ENV['RUBY_COMMIT_HASH'])
+        initiator_hash['commit_hash'] = ENV['RUBY_COMMIT_HASH']
+      elsif(ENV['RUBY_VERSION'])
+        initiator_hash['ruby_version'] = ENV['RUBY_VERSION']
+      end
+
       request.set_form_data({
         'benchmark_type[category]' => v,
         'benchmark_type[unit]' => 'seconds',
         'benchmark_type[script_url]' => "#{RAW_URL}#{v}.rb",
         "benchmark_run[result][#{v}]" => rets.first,
         'benchmark_run[environment]' => @execs.map { |(_,v)| v }.first,
-        'commit_hash' => ENV['RUBY_COMMIT_HASH'] || ENV['RUBY_VERSION'],
         'repo' => 'ruby',
         'organization' => 'tgxworld'
-      })
+      }.merge(initiator_hash))
 
       http.request(request)
       output "Posting results to Web UI...."
