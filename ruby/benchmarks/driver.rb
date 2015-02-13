@@ -74,8 +74,8 @@ class BenchmarkDriver
     @dir = dir
     @repeat = opt[:repeat] || 1
     @repeat = 1 if @repeat < 1
-    @pattern = opt[:pattern] || nil
-    @exclude = opt[:exclude] || nil
+    @patterns = opt[:pattern] || []
+    @excludes = opt[:exclude] || []
     @verbose = opt[:quiet] ? false : (opt[:verbose] || false)
     @output = opt[:output] ? open(opt[:output], 'w') : nil
     @rawdata_output = opt[:rawdata_output] ? open(opt[:rawdata_output], 'w') : nil
@@ -210,8 +210,9 @@ class BenchmarkDriver
   def files
     flag = {}
     @files = Dir.glob(File.join(@dir, 'bm*.rb')).map{|file|
-      next if @pattern && /#{@pattern}/ !~ File.basename(file)
-      next if @exclude && /#{@exclude}/ =~ File.basename(file)
+      next if !@patterns.empty? && /#{@patterns.join('|')}/ !~ File.basename(file)
+      next if !@excludes.empty? && /#{@excludes.join('|')}/ =~ File.basename(file)
+
       case file
       when /bm_(vm[12])_/, /bm_loop_(whileloop2?).rb/
         flag[$1] = true
@@ -313,11 +314,11 @@ if __FILE__ == $0
     o.on('-d', '--directory [DIRECTORY]', "Benchmark suites directory"){|d|
       opt[:dir] = d
     }
-    o.on('-p', '--pattern [PATTERN]', "Benchmark name pattern"){|p|
-      opt[:pattern] = p
+    o.on('-p', '--pattern <PATTERN1,PATTERN2,PATTERN3>', "Benchmark name pattern"){|p|
+      opt[:pattern] = p.split(',')
     }
-    o.on('-x', '--exclude [PATTERN]', "Benchmark exclude pattern"){|e|
-      opt[:exclude] = e
+    o.on('-x', '--exclude <PATTERN1,PATTERN2,PATTERN3>', "Benchmark exclude pattern"){|e|
+      opt[:exclude] = e.split(',')
     }
     o.on('-r', '--repeat-count [NUM]', "Repeat count"){|n|
       opt[:repeat] = n.to_i
