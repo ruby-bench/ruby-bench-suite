@@ -1,3 +1,8 @@
+# bm_app_answer.rb
+#
+# Use the long-running ackermann function to compute
+# the Answer.
+
 def ack(m, n)
   if m == 0 then
     n + 1
@@ -8,8 +13,12 @@ def ack(m, n)
   end
 end
 
-def the_answer_to_life_the_universe_and_everything
-  (ack(3,7).to_s.split(//).inject(0){|s,x| s+x.to_i}.to_s + "2" ).to_i
+def the_answer_to_life_the_universe_and_everything(m, n)
+  (ack(m, n)
+    .to_s
+    .split(//)
+    .inject(0) { |s, x| s + x.to_i }
+    .to_s + "2").to_i
 end
 
-answer = the_answer_to_life_the_universe_and_everything
+answer = the_answer_to_life_the_universe_and_everything(3, 7) # => 42
