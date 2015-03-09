@@ -1,0 +1,8 @@
+<% users.each do |user| %>
+  <%= form_for user, url: '/users' do |f|%>
+  <%= f.label :email %>
+  <%= f.email_field :email %>
+
+  <%= f.submit 'save' %>
+  <% end %>
+<% end %>

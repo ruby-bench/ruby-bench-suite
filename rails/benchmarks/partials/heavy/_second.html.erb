@@ -1,0 +1,7 @@
+<% posts.each do |post| %>
+  <h1><%= post.title %></h1>
+  <p><%= post.body %></p>
+  <small><%= post.from %></small>
+
+  <%= render partial: 'third', locals: { users: users } %>
+<% end %>

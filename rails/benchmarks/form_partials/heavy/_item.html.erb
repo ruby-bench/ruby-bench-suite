@@ -1,0 +1,12 @@
+<%= form_for post, url: '/posts' do |f|%>
+<%= f.label :body %>
+<%= f.text_field :body %>
+
+<%= f.label :from %>
+<%= f.text_field :from %>
+
+<%= f.label :title %>
+<%= f.text_field :title %>
+
+<%= f.submit 'save' %>
+<% end %>

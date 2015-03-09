@@ -1,0 +1,9 @@
+source 'https://rubygems.org'
+
+gem 'benchmark-ips', github: 'kirs/benchmark-ips', branch: 'quiet-mode'
+gem 'rails', path: '/rails'
+gem 'ffaker'
+gem 'sqlite3'
+gem 'stackprof'
+gem 'mysql2'
+gem 'pg'
