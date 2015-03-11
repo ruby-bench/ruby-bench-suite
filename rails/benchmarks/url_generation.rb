@@ -6,7 +6,7 @@ require 'json'
 require 'rails'
 require 'action_controller/railtie'
 
-TIME    = (ENV['BENCHMARK_TIME'] || 1).to_i
+TIME    = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 class NullLoger < Logger
   def initialize(*args)

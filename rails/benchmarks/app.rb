@@ -81,7 +81,7 @@ Rails.application.routes.draw do
   end
 end
 
-ActionController::Base.prepend_view_path "views"
+ActionController::Base.prepend_view_path File.expand_path("../views", __FILE__)
 
 class PostsController < ActionController::Base
   before_filter :set_post, only: [:show, :edit, :update, :destroy]

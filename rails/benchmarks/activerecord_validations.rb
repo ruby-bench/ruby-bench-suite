@@ -12,37 +12,18 @@ require 'ffaker'
 TIME = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
+ActiveRecord::Migration.verbose = false
 
-def quietly
-  silence_stream(STDOUT) do
-    silence_stream(STDERR) do
-      yield
-    end
-  end
-end
-
-def silence_stream(stream)
-  old_stream = stream.dup
-  stream.reopen(IO::NULL)
-  stream.sync = true
-  yield
-ensure
-  stream.reopen(old_stream)
-  old_stream.close
-end
-
-quietly do
-  ActiveRecord::Schema.define do
-    create_table :posts, force: true do |t|
-      t.string :title
-      t.string :author
-      t.text :body
-      t.integer :sequence
-      t.integer :age
-      t.string :subdomain
-      t.string :legacy_code
-      t.string :size
-    end
+ActiveRecord::Schema.define do
+  create_table :posts, force: true do |t|
+    t.string :title
+    t.string :author
+    t.text :body
+    t.integer :sequence
+    t.integer :age
+    t.string :subdomain
+    t.string :legacy_code
+    t.string :size
   end
 end
 

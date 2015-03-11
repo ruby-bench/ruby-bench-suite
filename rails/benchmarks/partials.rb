@@ -7,7 +7,7 @@ require 'ffaker'
 require 'rails'
 require 'action_controller/railtie'
 
-TIME    = (ENV['BENCHMARK_TIME'] || 10).to_i
+TIME    = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 class HeavyController < ActionController::Base
   def index

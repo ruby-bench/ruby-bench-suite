@@ -13,38 +13,19 @@ TIME = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
 
-def quietly
-  silence_stream(STDOUT) do
-    silence_stream(STDERR) do
-      yield
-    end
+ActiveRecord::Migration.verbose = false
+ActiveRecord::Schema.define do
+  create_table :posts, force: true do |t|
+    t.string :title
+    t.string :author
+    t.text :body
   end
-end
 
-def silence_stream(stream)
-  old_stream = stream.dup
-  stream.reopen(IO::NULL)
-  stream.sync = true
-  yield
-ensure
-  stream.reopen(old_stream)
-  old_stream.close
-end
-
-quietly do
-  ActiveRecord::Schema.define do
-    create_table :posts, force: true do |t|
-      t.string :title
-      t.string :author
-      t.text :body
-    end
-
-    create_table :comments, force: true do |t|
-      t.integer :post_id
-      t.text :body
-      t.string :email
-      t.string :author
-    end
+  create_table :comments, force: true do |t|
+    t.integer :post_id
+    t.text :body
+    t.string :email
+    t.string :author
   end
 end
 
