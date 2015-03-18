@@ -153,7 +153,7 @@ class BenchmarkDriver
         rets << sprintf("%.3f", r)
       }
 
-      http = Net::HTTP.new('rubybench.org')
+      http = Net::HTTP.new(ENV["API_URL"] || 'rubybench.org')
       request = Net::HTTP::Post.new('/benchmark_runs')
       request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
 
