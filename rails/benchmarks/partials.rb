@@ -1,13 +1,10 @@
 require 'bundler/setup'
 
-require 'benchmark/ips'
 require 'json'
 require 'ffaker'
 
 require 'rails'
 require 'action_controller/railtie'
-
-TIME    = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 class HeavyController < ActionController::Base
   def index
@@ -55,23 +52,14 @@ def render_views
   view.render(template: "first", layout: "layouts/application", locals: locals)
 end
 
-report = Benchmark.ips(TIME, quiet: true) do |x|
-  x.report("render nested partials") do
-    render_views
-  end
+m = Benchmark.measure do |x|
+  render_views
 end
 
 stats = {
   component: "actionview/render_partials",
   version: Rails.version.to_s,
-  entries: report.entries.map { |e|
-    {
-      label: e.label,
-      iterations: e.iterations,
-      ips: e.ips,
-      ips_sd: e.ips_sd
-    }
-  }
+  timings: m.real
 }
 
 puts stats.to_json

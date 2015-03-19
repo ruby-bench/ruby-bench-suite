@@ -1,14 +1,11 @@
 require 'bundler/setup'
 
-require 'benchmark/ips'
 require 'json'
 require 'ffaker'
 
 require 'rails'
 require 'action_controller/railtie'
 require 'active_model'
-
-TIME    = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 class HeavyController < ActionController::Base
   def index
@@ -28,27 +25,12 @@ class Post
   include ActiveModel::Model
 
   attr_accessor :title, :from, :body
-
-  # def title
-  #   Faker::Name.name
-  # end
-
-  # def from
-  #   Faker::AddressFI.city
-  # end
-
-  # def body
-  #   Faker::HipsterIpsum.words(50).join(" ")
-  # end
 end
 
 class User
   include ActiveModel::Model
 
   attr_accessor :email
-  # def email
-  #   Faker::Internet.email
-  # end
 end
 
 def post_factory
@@ -73,28 +55,14 @@ def render_views
   view.render(template: "first", layout: "layouts/application", locals: locals)
 end
 
-# file = Tempfile.new('foo')
-# file.write(render_views)
-# `open #{file.path}`
-# sleep 1
-
-report = Benchmark.ips(TIME, quiet: true) do |x|
-  x.report("render nested partials") do
-    render_views
-  end
+m = Benchmark.measure do
+  render_views
 end
 
 stats = {
   component: "actionview/render_activemodels",
   version: Rails.version.to_s,
-  entries: report.entries.map { |e|
-    {
-      label: e.label,
-      iterations: e.iterations,
-      ips: e.ips,
-      ips_sd: e.ips_sd
-    }
-  }
+  timing: m.real
 }
 
 puts stats.to_json

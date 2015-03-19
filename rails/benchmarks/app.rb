@@ -1,6 +1,5 @@
 require 'bundler/setup'
 
-require 'benchmark/ips'
 require 'json'
 require 'stackprof'
 
@@ -9,8 +8,6 @@ require 'action_controller/railtie'
 require 'active_record'
 require 'sqlite3'
 require 'ffaker'
-
-TIME = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 class NullLoger < Logger
   def initialize(*args)
@@ -285,51 +282,40 @@ def request(method, path, query_string: "", body: {})
 end
 
 
-# StackProf.run(mode: :cpu, out: "/tmp/stackprof-app-#{Rails.version.to_s}.dump") do
-  report = Benchmark.ips(TIME, quiet: true) do |x|
-    x.report("app with comments and posts") do
-      request(:get, "/posts")
-      2.times do
-        request(:get, "/posts/new")
-        request(:post, "/posts", body: { post: { title: Faker::Food.herb_or_spice, body: Faker::HipsterIpsum.words(50).join(" "), author: Faker::Name.name }})
-      end
+m = Benchmark.measure do
+  request(:get, "/posts")
+  2.times do
+    request(:get, "/posts/new")
+    request(:post, "/posts", body: { post: { title: Faker::Food.herb_or_spice, body: Faker::HipsterIpsum.words(50).join(" "), author: Faker::Name.name }})
+  end
 
-      Post.all.each do |post|
-        post_path = "/posts/#{post.id}"
-        request(:get, post_path)
-        request(:post, "#{post_path}/comments", body: {
-          comment: {
-            body: Faker::HipsterIpsum.words(50).join(" "),
-            email: Faker::Internet.email,
-            author: Faker::Name.name
-          }
-        })
-        if Comment.count.zero?
-          raise "comment not inserted"
-        end
+  Post.all.each do |post|
+    post_path = "/posts/#{post.id}"
+    request(:get, post_path)
+    request(:post, "#{post_path}/comments", body: {
+      comment: {
+        body: Faker::HipsterIpsum.words(50).join(" "),
+        email: Faker::Internet.email,
+        author: Faker::Name.name
+      }
+    })
+    if Comment.count.zero?
+      raise "comment not inserted"
+    end
 
-        request(:get, post_path)
-        request(:delete, post_path)
-        begin
-          request(:get, post_path)
-        rescue RouteNotFoundError
-        end
-      end
+    request(:get, post_path)
+    request(:delete, post_path)
+    begin
+      request(:get, post_path)
+    rescue RouteNotFoundError
     end
   end
-# end
+end
 
 stats = {
   component: :app,
   version: Rails.version.to_s,
-  entries: report.entries.map { |e|
-    {
-      label: e.label,
-      iterations: e.iterations,
-      ips: e.ips,
-      ips_sd: e.ips_sd
-    }
-  }
+  timing: m.real
 }
 
 puts stats.to_json

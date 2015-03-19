@@ -1,6 +1,4 @@
 require 'bundler/setup'
-
-require 'benchmark/ips'
 require 'json'
 
 require 'rails'
@@ -44,41 +42,32 @@ end
   end
 end
 
-report = Benchmark.ips(TIME, quiet: true) do |x|
-  x.report("complex script with comments and posts") do
-    Post.all
+m = Benchmark.measure do
+  Post.all
 
-    2.times do
-      Post.create!(title: Faker::Food.herb_or_spice, body: Faker::HipsterIpsum.words(50).join(" "), author: Faker::Name.name)
-    end
+  2.times do
+    Post.create!(title: Faker::Food.herb_or_spice, body: Faker::HipsterIpsum.words(50).join(" "), author: Faker::Name.name)
+  end
 
-    Post.all.each do |post|
-      pos = Post.find(post.id)
-      pos.comments.all
+  Post.all.each do |post|
+    pos = Post.find(post.id)
+    pos.comments.all
 
-      pos.comments.create!(
-        body: Faker::HipsterIpsum.words(50).join(" "),
-        email: Faker::Internet.email,
-        author: Faker::Name.name)
+    pos.comments.create!(
+      body: Faker::HipsterIpsum.words(50).join(" "),
+      email: Faker::Internet.email,
+      author: Faker::Name.name)
 
-      Post.find(post.id)
-      Post.find(post.id).comments.all
-      Post.find(post.id).destroy
-    end
+    Post.find(post.id)
+    Post.find(post.id).comments.all
+    Post.find(post.id).destroy
   end
 end
 
 stats = {
   component: :app,
   version: Rails.version.to_s,
-  entries: report.entries.map { |e|
-    {
-      label: e.label,
-      iterations: e.iterations,
-      ips: e.ips,
-      ips_sd: e.ips_sd
-    }
-  }
+  timing: m.real
 }
 
 puts stats.to_json

@@ -1,12 +1,9 @@
 require 'bundler/setup'
 
-require 'benchmark/ips'
 require 'json'
 
 require 'rails'
 require 'action_controller/railtie'
-
-TIME    = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 class NullLoger < Logger
   def initialize(*args)
@@ -82,49 +79,3 @@ class Router
     }
   end
 end
-
-report = Benchmark.ips(TIME, quiet: true) do |x|
-  router = Router.new
-
-  x.report("redirect route") do
-    router.listing_redirect_path(:any)
-  end
-
-  x.report("constraints & matched routes") do
-    router.residential_path(id: 2, addressing_slug: 'brooklyn')
-    router.by_category_professionals_path(2)
-  end
-
-  x.report("url_for") do
-    router.url_for(controller: 'prices', action: 'info')
-    router.url_for(controller: 'coupons', action: 'some')
-    router.url_for(controller: 'professionals', action: 'index')
-  end
-
-  x.report("REST routes") do
-    router.topic_path(2)
-    router.edit_topic_path(2)
-    router.edit_topic_message_path(1, 2)
-    router.new_topic_message_path(1, 2)
-    router.topic_message_path(1, 2)
-
-    router.topic_message_like_path(1, 2, 3)
-    router.edit_topic_message_like_path(1, 2, 3)
-    router.new_topic_message_like_path(1, 2, 3)
-  end
-end
-
-stats = {
-  component: 'actionpack/url_generation',
-  version: Rails.version.to_s,
-  entries: report.entries.map { |e|
-    {
-      label: e.label,
-      iterations: e.iterations,
-      ips: e.ips,
-      ips_sd: e.ips_sd
-    }
-  }
-}
-
-puts stats.to_json

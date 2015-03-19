@@ -1,12 +1,8 @@
 require 'bundler/setup'
 
-require 'benchmark/ips'
 require 'json'
-
 require 'rails'
 require 'action_controller/railtie'
-
-TIME    = (ENV['BENCHMARK_TIME'] || 5).to_i
 
 class NullLoger < Logger
   def initialize(*args)
@@ -101,77 +97,29 @@ BenchmarkApp.initialize!
 
 class RouteNotFoundError < StandardError;end
 
-def request(method, path, query_string: "")
-  env = {
-    "GATEWAY_INTERFACE"=>"CGI/1.1",
-    "PATH_INFO"=>path,
-    "QUERY_STRING"=>query_string,
-    "REMOTE_ADDR"=>"127.0.0.1",
-    "REMOTE_HOST"=>"127.0.0.1",
-    "REQUEST_METHOD"=>method.to_s.upcase,
-    "REQUEST_URI"=>"http://localhost:3000#{path}",
-    "SCRIPT_NAME"=>"",
-    "SERVER_NAME"=>"localhost",
-    "SERVER_PORT"=>"3000",
-    "SERVER_PROTOCOL"=>"HTTP/1.1",
-    "SERVER_SOFTWARE"=>"WEBrick/1.3.1 (Ruby/2.1.2/2014-05-08)",
-    "HTTP_HOST"=>"localhost:3000",
-    "HTTP_ACCEPT_ENCODING"=>"gzip, deflate",
-    "HTTP_ACCEPT"=>"*/*",
-    "HTTP_USER_AGENT"=>"HTTPie/0.8.0",
-    "rack.version"=>[1, 2],
-    "rack.multithread"=>false,
-    "rack.multiprocess"=>false,
-    "rack.run_once"=>false,
-    "rack.url_scheme"=>"http",
-    "rack.input" => StringIO.new,
-    "HTTP_VERSION"=>"HTTP/1.1",
-    "REQUEST_PATH"=>path
-  }
-  response = BenchmarkApp.call(env)
-  if response[0].in?([404, 500])
+def request(method, path)
+  response = Rack::MockRequest.new(BenchmarkApp).send(method, path)
+  if response.status.in?([404, 500])
     raise RouteNotFoundError.new, "not found #{method.to_s.upcase} #{path}"
   end
   response
 end
 
-report = Benchmark.ips(TIME, quiet: true) do |x|
-  x.report("root route") do
-    request(:get, "/")
-  end
+m = Benchmark.measure do |x|
+  request(:get, "/")
+  request(:get, "/topics/1/messages/1/likes/")
 
-  x.report '3rd level nested resource #index' do
-    request(:get, "/topics/1/messages/1/likes/")
-  end
+  request(:get, "/topics/1/messages/1/likes/1")
 
-  x.report '3rd level nested resource #show' do
-    request(:get, "/topics/1/messages/1/likes/1")
-  end
-
-  x.report 'route with inline redirect' do
-    request(:get, "/listings/complicated")
-  end
-
-  x.report("match with POST") do
-    request(:post, "/professionals/category/first")
-  end
-
-  x.report("match with GET") do
-    request(:get, "/professionals/category/first")
-  end
+  request(:get, "/listings/complicated")
+  request(:post, "/professionals/category/first")
+  request(:get, "/professionals/category/first")
 end
 
 stats = {
   component: :router,
   version: Rails.version.to_s,
-  entries: report.entries.map { |e|
-    {
-      label: e.label,
-      iterations: e.iterations,
-      ips: e.ips,
-      ips_sd: e.ips_sd
-    }
-  }
+  timing: m.real
 }
 
 puts stats.to_json
