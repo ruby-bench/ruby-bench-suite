@@ -105,7 +105,7 @@ def request(method, path)
   response
 end
 
-m = Benchmark.measure do |x|
+m = Benchmark.measure do
   request(:get, "/")
   request(:get, "/topics/1/messages/1/likes/")
 

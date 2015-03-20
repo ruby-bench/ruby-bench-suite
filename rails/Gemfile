@@ -1,5 +1,11 @@
 source 'https://rubygems.org'
 
+module ::Kernel
+  def rails_master?
+    ENV["RAILS_MASTER"] == '1'
+  end
+end
+
 gem 'rails', path: '/rails'
 
 # uncomment this to use Rails from HEAD
@@ -7,7 +13,9 @@ gem 'rails', path: '/rails'
 
 gem 'ffaker'
 gem 'sqlite3'
-gem 'stackprof'
 gem 'mysql2'
 gem 'pg'
-gem 'arel', github: 'rails/arel', branch: 'master'
+
+if rails_master?
+  gem 'arel', github: 'rails/arel', branch: 'master'
+end

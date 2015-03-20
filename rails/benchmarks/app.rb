@@ -1,7 +1,6 @@
 require 'bundler/setup'
 
 require 'json'
-require 'stackprof'
 
 require 'rails'
 require 'action_controller/railtie'
@@ -62,13 +61,6 @@ end
 class Comment < ActiveRecord::Base
   belongs_to :post
 end
-
-# 5.times do
-#   post = Post.create!(title: Faker::Name.name, body: Faker::HipsterIpsum.words(50).join(" "))
-#   2.times do
-#     post.comments.create(email: Faker::Internet.email, body: Faker::HipsterIpsum.words(50).join(" "), author: Faker::Name.name)
-#   end
-# end
 
 BenchmarkApp.initialize!
 

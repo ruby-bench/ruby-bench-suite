@@ -3,7 +3,7 @@ require 'bundler/setup'
 require 'active_record'
 require 'json'
 
-RECORDS = (ENV['BENCHMARK_RECORDS'] || 1000).to_i
+SEED_COUNT = (ENV['SEED_COUNT'] || 1000).to_i
 
 class User < ActiveRecord::Base
   has_many :exhibits
@@ -74,7 +74,7 @@ end
 notes = ActiveRecord::Faker::LOREM.join(' ')
 today = Date.today
 
-RECORDS.times do |record|
+SEED_COUNT.times do |record|
   user = User.create!(
     created_at: today,
     name: ActiveRecord::Faker.name,

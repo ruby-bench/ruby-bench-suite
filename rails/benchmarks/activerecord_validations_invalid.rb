@@ -1,6 +1,6 @@
 require_relative 'support/activerecord_validations_base.rb'
 
-m = Benchmark.measure do |x|
+m = Benchmark.measure do
   post = Post.new({
     title: '',
     author: '',

@@ -8,14 +8,10 @@ require 'action_controller/railtie'
 require 'active_model'
 
 class HeavyController < ActionController::Base
-  def index
-    # @more_records = %w(one two three)
-  end
+  def index;end
 end
 
 class HeavyView < ActionView::Base
-  # include ApplicationHelper
-  # include Rails.application.routes.url_helpers
   def protect_against_forgery?
     false
   end

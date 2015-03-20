@@ -8,13 +8,10 @@ require 'action_controller/railtie'
 
 class HeavyController < ActionController::Base
   def index
-    # @more_records = %w(one two three)
   end
 end
 
 class HeavyView < ActionView::Base
-  # include ApplicationHelper
-  # include Rails.application.routes.url_helpers
 end
 
 Post = Struct.new(:id) do
@@ -52,7 +49,7 @@ def render_views
   view.render(template: "first", layout: "layouts/application", locals: locals)
 end
 
-m = Benchmark.measure do |x|
+m = Benchmark.measure do
   render_views
 end
 
