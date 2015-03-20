@@ -7,10 +7,7 @@ require 'active_record'
 require 'sqlite3'
 require 'ffaker'
 
-TIME = (ENV['BENCHMARK_TIME'] || 5).to_i
-
-ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
-
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 ActiveRecord::Migration.verbose = false
 ActiveRecord::Schema.define do
   create_table :posts, force: true do |t|
@@ -65,7 +62,7 @@ m = Benchmark.measure do
 end
 
 stats = {
-  component: :app,
+  component: "activerecord/#{db_adapter}/complex",
   version: Rails.version.to_s,
   timing: m.real
 }

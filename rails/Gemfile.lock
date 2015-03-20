@@ -5,8 +5,9 @@ GIT
   specs:
     arel (7.0.0.alpha)
 
-PATH
-  remote: rails
+GIT
+  remote: git://github.com/rails/rails.git
+  revision: a1d042bea1d3b6d2e41356b3240e3e146823c19b
   specs:
     actionmailer (5.0.0.alpha)
       actionpack (= 5.0.0.alpha)
@@ -90,7 +91,7 @@ GEM
       rack (>= 1.0)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
-    rails-dom-testing (1.0.5)
+    rails-dom-testing (1.0.6)
       activesupport (>= 4.2.0.beta, < 5.0)
       nokogiri (~> 1.6.0)
       rails-deprecated_sanitizer (>= 1.0.1)
