@@ -1,6 +1,7 @@
 require_relative 'support/activerecord_validations_base.rb'
+require_relative 'support/benchmark_rails.rb'
 
-m = Benchmark.measure do
+m = Benchmark.rails(100, "active_record/validations/invalid") do
   post = Post.new({
     title: '',
     author: '',
@@ -15,11 +16,4 @@ m = Benchmark.measure do
     raise "should not be valid"
   end
 end
-
-stats = {
-  component: 'active_record/validations/invalid',
-  version: Rails.version.to_s,
-  timing: m.real
-}
-
-puts stats.to_json
+puts m.to_json

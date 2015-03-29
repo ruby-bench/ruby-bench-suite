@@ -6,6 +6,8 @@ require 'ffaker'
 require 'rails'
 require 'action_controller/railtie'
 
+require_relative 'support/benchmark_rails.rb'
+
 class HeavyController < ActionController::Base
   def index
   end
@@ -49,14 +51,7 @@ def render_views
   view.render(template: "first", layout: "layouts/application", locals: locals)
 end
 
-m = Benchmark.measure do
+m = Benchmark.rails(50, "actionview/render_partials") do
   render_views
 end
-
-stats = {
-  component: "actionview/render_partials",
-  version: Rails.version.to_s,
-  timings: m.real
-}
-
-puts stats.to_json
+puts m.to_json

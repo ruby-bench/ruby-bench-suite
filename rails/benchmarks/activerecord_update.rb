@@ -1,6 +1,7 @@
 require_relative 'support/activerecord_base.rb'
+require_relative 'support/benchmark_rails.rb'
 
-m = Benchmark.measure do
+m = Benchmark.rails(100, "activerecord/#{db_adapter}/update") do
   model = Exhibit.first
   if model.respond_to?(:update)
     Exhibit.first.update(name: 'bob')
@@ -9,10 +10,4 @@ m = Benchmark.measure do
   end
 end
 
-stats = {
-  component: "activerecord/#{db_adapter}/update",
-  version: ActiveRecord::VERSION::STRING,
-  timing: m.real
-}
-
-puts stats.to_json
+puts m.to_json
