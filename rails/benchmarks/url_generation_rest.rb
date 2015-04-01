@@ -1,7 +1,7 @@
 require_relative 'support/url_generation_base.rb'
 require_relative 'support/benchmark_rails.rb'
 
-m = Benchmark.rails(100, "actionpack/url_generation/rest") do
+Benchmark.rails("actionpack/url_generation/rest", time: 10) do
   router = Router.new
 
   router.topic_path(2)
@@ -14,4 +14,3 @@ m = Benchmark.rails(100, "actionpack/url_generation/rest") do
   router.edit_topic_message_like_path(1, 2, 3)
   router.new_topic_message_like_path(1, 2, 3)
 end
-puts m.to_json

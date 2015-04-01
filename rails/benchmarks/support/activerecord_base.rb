@@ -2,7 +2,6 @@ require 'bundler/setup'
 
 require 'rails'
 require 'active_record'
-require 'json'
 
 SEED_COUNT = (ENV['SEED_COUNT'] || 1000).to_i
 
