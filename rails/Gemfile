@@ -6,16 +6,14 @@ module ::Kernel
   end
 end
 
-gem 'rails', path: '/rails'
-
-# uncomment this to use Rails from HEAD
-# gem 'rails', github: 'rails'
+if rails_master?
+  gem 'rails', github: 'rails'
+  gem 'arel', github: 'rails/arel', branch: 'master'
+else
+  gem 'rails', path: '/rails'
+end
 
 gem 'ffaker'
 gem 'sqlite3'
 gem 'mysql2'
 gem 'pg'
-
-if rails_master?
-  gem 'arel', github: 'rails/arel', branch: 'master'
-end
