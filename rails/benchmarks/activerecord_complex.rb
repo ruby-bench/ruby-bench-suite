@@ -7,6 +7,8 @@ require 'active_record'
 require 'sqlite3'
 require 'ffaker'
 
+require_relative 'support/benchmark_rails.rb'
+
 ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 ActiveRecord::Migration.verbose = false
 ActiveRecord::Schema.define do
@@ -39,7 +41,7 @@ end
   end
 end
 
-m = Benchmark.measure do
+m = Benchmark.rails(100, "activerecord/#{ENV['DATABASE_URL'].split(":")[0]}/complex") do
   Post.all
 
   2.times do
@@ -61,10 +63,4 @@ m = Benchmark.measure do
   end
 end
 
-stats = {
-  component: "activerecord/#{db_adapter}/complex",
-  version: Rails.version.to_s,
-  timing: m.real
-}
-
-puts stats.to_json
+puts m.to_json

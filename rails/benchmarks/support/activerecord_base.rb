@@ -1,5 +1,6 @@
 require 'bundler/setup'
 
+require 'rails'
 require 'active_record'
 require 'json'
 

@@ -4,6 +4,8 @@ require 'json'
 require 'rails'
 require 'action_controller/railtie'
 
+require_relative 'support/benchmark_rails.rb'
+
 class NullLoger < Logger
   def initialize(*args)
   end
@@ -105,7 +107,7 @@ def request(method, path)
   response
 end
 
-m = Benchmark.measure do
+m = Benchmark.rails(100, "router") do
   request(:get, "/")
   request(:get, "/topics/1/messages/1/likes/")
 
@@ -115,11 +117,4 @@ m = Benchmark.measure do
   request(:post, "/professionals/category/first")
   request(:get, "/professionals/category/first")
 end
-
-stats = {
-  component: :router,
-  version: Rails.version.to_s,
-  timing: m.real
-}
-
-puts stats.to_json
+puts m.to_json
