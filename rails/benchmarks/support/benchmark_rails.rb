@@ -3,7 +3,7 @@ require 'json'
 
 module Benchmark
   module Rails
-    def rails(label=nil, time:, disable_gc: true, warmup: 3)
+    def rails(label=nil, time:, disable_gc: true, warmup: 3, &block)
       unless block_given?
         raise ArgumentError.new, "block should be passed"
       end
@@ -25,10 +25,27 @@ module Benchmark
         label: label,
         version: ::Rails.version.to_s,
         ips: entry.ips,
-        ips_sd_percentage: entry.stddev_percentage
+        ips_sd_percentage: entry.stddev_percentage,
+        total_allocated_objects_per_iteration: get_total_allocated_objects(&block)
       }.to_json
 
       puts output
+    end
+
+    def get_total_allocated_objects
+      if block_given?
+        key =
+          if RUBY_VERSION < '2.2'
+            :total_allocated_object
+          else
+            :total_allocated_objects
+          end
+
+        before = GC.stat[key]
+        yield
+        after = GC.stat[key]
+        after - before
+      end
     end
   end
 
