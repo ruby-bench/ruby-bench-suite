@@ -24,8 +24,8 @@ module Benchmark
       output = {
         label: label,
         version: ::Rails.version.to_s,
-        ips: entry.ips,
-        ips_sd_percentage: entry.stddev_percentage,
+        iterations_per_second: entry.ips,
+        iterations_per_second_standard_deviation: entry.stddev_percentage,
         total_allocated_objects_per_iteration: get_total_allocated_objects(&block)
       }.to_json
 
