@@ -14,8 +14,7 @@ module Benchmark
         GC.enable
       end
 
-      report = Benchmark.ips do |x|
-        x.config(time: time, warmup: warmup, quiet: true)
+      report = Benchmark.ips(time, warmup, true) do |x|
         x.report(label) { yield }
       end
 

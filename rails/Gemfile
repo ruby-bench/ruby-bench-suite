@@ -17,4 +17,7 @@ gem 'ffaker'
 gem 'sqlite3'
 gem 'mysql2'
 gem 'pg'
-gem 'benchmark-ips', '~> 2.1.1'
+
+# Update gem version once upstream commit has been released. This is required
+# for `quiet` mode in benchmark/ips.
+gem 'benchmark-ips', github: 'evanphx/benchmark-ips', ref: '11d8f2071313145f246b9b5e383d282a5a0b3179'
