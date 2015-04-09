@@ -1,7 +1,7 @@
 require_relative 'support/app_base.rb'
 require_relative 'support/benchmark_rails.rb'
 
-m = Benchmark.rails(100, "app") do
+Benchmark.rails("app", time: 10) do
   AppBenchmark.request(:get, "/posts")
   2.times do
     AppBenchmark.request(:get, "/posts/new")
@@ -30,5 +30,3 @@ m = Benchmark.rails(100, "app") do
     end
   end
 end
-
-puts m.to_json

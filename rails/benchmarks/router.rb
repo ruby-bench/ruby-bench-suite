@@ -1,6 +1,5 @@
 require 'bundler/setup'
 
-require 'json'
 require 'rails'
 require 'action_controller/railtie'
 
@@ -107,7 +106,7 @@ def request(method, path)
   response
 end
 
-m = Benchmark.rails(100, "router") do
+Benchmark.rails("router", time: 10) do
   request(:get, "/")
   request(:get, "/topics/1/messages/1/likes/")
 
@@ -117,4 +116,3 @@ m = Benchmark.rails(100, "router") do
   request(:post, "/professionals/category/first")
   request(:get, "/professionals/category/first")
 end
-puts m.to_json

@@ -1,5 +1,4 @@
 require 'bundler/setup'
-require 'json'
 
 require 'rails'
 require 'action_controller/railtie'
@@ -41,7 +40,7 @@ end
   end
 end
 
-m = Benchmark.rails(100, "activerecord/#{ENV['DATABASE_URL'].split(":")[0]}/complex") do
+Benchmark.rails("activerecord/#{ENV['DATABASE_URL'].split(":")[0]}/complex", time: 10) do
   Post.all
 
   2.times do
@@ -62,5 +61,3 @@ m = Benchmark.rails(100, "activerecord/#{ENV['DATABASE_URL'].split(":")[0]}/comp
     Post.find(post.id).destroy
   end
 end
-
-puts m.to_json

@@ -1,5 +1,4 @@
 require 'bundler/setup'
-require 'json'
 
 require 'rails'
 require 'action_controller/railtie'

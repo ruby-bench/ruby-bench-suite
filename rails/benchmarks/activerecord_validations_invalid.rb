@@ -1,7 +1,7 @@
 require_relative 'support/activerecord_validations_base.rb'
 require_relative 'support/benchmark_rails.rb'
 
-m = Benchmark.rails(100, "active_record/validations/invalid") do
+Benchmark.rails("active_record/validations/invalid", time: 10) do
   post = Post.new({
     title: '',
     author: '',
@@ -16,4 +16,3 @@ m = Benchmark.rails(100, "active_record/validations/invalid") do
     raise "should not be valid"
   end
 end
-puts m.to_json

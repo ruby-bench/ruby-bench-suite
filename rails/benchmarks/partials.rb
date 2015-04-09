@@ -1,6 +1,5 @@
 require 'bundler/setup'
 
-require 'json'
 require 'ffaker'
 
 require 'rails'
@@ -51,7 +50,6 @@ def render_views
   view.render(template: "first", layout: "layouts/application", locals: locals)
 end
 
-m = Benchmark.rails(50, "actionview/render_partials") do
+Benchmark.rails("actionview/render_partials", time: 10) do
   render_views
 end
-puts m.to_json

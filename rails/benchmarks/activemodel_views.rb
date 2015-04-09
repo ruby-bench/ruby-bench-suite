@@ -2,7 +2,6 @@ require 'bundler/setup'
 
 require_relative 'support/benchmark_rails.rb'
 
-require 'json'
 require 'ffaker'
 
 require 'rails'
@@ -39,7 +38,7 @@ def user_factory
   { email: Faker::Internet.email }
 end
 
-m = Benchmark.rails(100, "actionview/render_activemodels") do
+Benchmark.rails("actionview/render_activemodels", time: 10) do
   controller = HeavyController.new
   controller.request = ActionDispatch::Request.new({})
 
@@ -52,5 +51,3 @@ m = Benchmark.rails(100, "actionview/render_activemodels") do
   }
   view.render(template: "first", layout: "layouts/application", locals: locals)
 end
-
-puts m.to_json

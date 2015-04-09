@@ -1,6 +1,9 @@
+require 'benchmark/ips'
+require 'json'
+
 module Benchmark
   module Rails
-    def rails(n=1000, label=nil, disable_gc: true, warmup: 3)
+    def rails(label=nil, time:, disable_gc: true, warmup: 3, &block)
       unless block_given?
         raise ArgumentError.new, "block should be passed"
       end
@@ -11,40 +14,37 @@ module Benchmark
         GC.enable
       end
 
-      warmup_iter = 0
-      while warmup_iter < warmup
-        yield
-        warmup_iter += 1
+      report = Benchmark.ips(time, warmup, true) do |x|
+        x.report(label) { yield }
       end
 
-      # warmed up!
+      entry = report.entries.first
 
-      timings = []
-      iters = 0
-      while iters < n
-        before = Time.now
-        yield
-        after = Time.now
-
-        iters += 1
-
-        timings << (after - before)
-      end
-
-      {
+      output = {
         label: label,
         version: ::Rails.version.to_s,
-        timing: Helpers.mean(timings).round(5)
-      }
+        iterations_per_second: entry.ips,
+        iterations_per_second_standard_deviation: entry.stddev_percentage,
+        total_allocated_objects_per_iteration: get_total_allocated_objects(&block)
+      }.to_json
+
+      puts output
     end
 
-    module Helpers
-      def mean(samples)
-        sum = samples.inject(0) { |acc, i| acc + i }
-        sum / samples.size
-      end
+    def get_total_allocated_objects
+      if block_given?
+        key =
+          if RUBY_VERSION < '2.2'
+            :total_allocated_object
+          else
+            :total_allocated_objects
+          end
 
-      module_function :mean
+        before = GC.stat[key]
+        yield
+        after = GC.stat[key]
+        after - before
+      end
     end
   end
 
