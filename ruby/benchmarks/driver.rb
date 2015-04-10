@@ -161,7 +161,7 @@ class BenchmarkDriver
       if(ENV['RUBY_COMMIT_HASH'])
         initiator_hash['commit_hash'] = ENV['RUBY_COMMIT_HASH']
       elsif(ENV['RUBY_VERSION'])
-        initiator_hash['ruby_version'] = ENV['RUBY_VERSION']
+        initiator_hash['version'] = ENV['RUBY_VERSION']
       end
 
       request.set_form_data({
