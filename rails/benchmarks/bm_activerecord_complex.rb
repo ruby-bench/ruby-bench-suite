@@ -40,7 +40,7 @@ end
   end
 end
 
-Benchmark.rails("activerecord/#{ENV['DATABASE_URL'].split(":")[0]}/complex", time: 10) do
+Benchmark.rails("activerecord/#{ENV['DATABASE_URL'].split(":")[0]}_complex", time: 10) do
   Post.all
 
   2.times do

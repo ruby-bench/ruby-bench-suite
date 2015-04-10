@@ -50,6 +50,6 @@ def render_views
   view.render(template: "first", layout: "layouts/application", locals: locals)
 end
 
-Benchmark.rails("actionview/render_partials", time: 10) do
+Benchmark.rails("actionview_render_partials", time: 10) do
   render_views
 end

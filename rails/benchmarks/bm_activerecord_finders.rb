@@ -3,7 +3,7 @@ require_relative 'support/benchmark_rails.rb'
 
 User.create!(name: 'kir', email: 'shatrov@me.com')
 
-Benchmark.rails("activerecord/#{db_adapter}/finders", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_finders", time: 10) do
   User.first
   User.find(1)
   User.find_by(email: 'shatrov@me.com')
