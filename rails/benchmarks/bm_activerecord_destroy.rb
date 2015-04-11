@@ -26,8 +26,7 @@ attributes = {
   created_at: Date.today
 }
 
-user = User.create!(attributes)
-
 Benchmark.rails("activerecord/sqlite3_destroy", time: 10) do
+  user = User.create!(attributes)
   user.destroy
 end

@@ -26,9 +26,9 @@ attributes = {
 
 class User < ActiveRecord::Base; end
 
-user = User.new(attributes)
-
 Benchmark.rails("activerecord/sqlite3_new", time: 10) do
+  user = User.new(attributes)
+
   unless user.save
     raise "should save correctly"
   end
