@@ -5,7 +5,6 @@ require 'action_controller/railtie'
 require 'active_record'
 require 'sqlite3'
 require 'ffaker'
-require 'jbuilder'
 
 class NullLoger < Logger
   def initialize(*args)

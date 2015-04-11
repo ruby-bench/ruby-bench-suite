@@ -106,7 +106,7 @@ def request(method, path)
   response
 end
 
-Benchmark.rails("router", time: 10) do
+Benchmark.rails("actionpack_router", time: 10) do
   request(:get, "/")
   request(:get, "/topics/1/messages/1/likes/")
 

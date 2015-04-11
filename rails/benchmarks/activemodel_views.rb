@@ -38,7 +38,7 @@ def user_factory
   { email: Faker::Internet.email }
 end
 
-Benchmark.rails("actionview/render_activemodels", time: 10) do
+Benchmark.rails("actionview_render_activemodels", time: 10) do
   controller = HeavyController.new
   controller.request = ActionDispatch::Request.new({})
 

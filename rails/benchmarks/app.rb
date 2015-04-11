@@ -1,7 +1,7 @@
 require_relative 'support/app_base.rb'
 require_relative 'support/benchmark_rails.rb'
 
-Benchmark.rails("app", time: 10) do
+Benchmark.rails("overall_app", time: 10) do
   AppBenchmark.request(:get, "/posts")
   2.times do
     AppBenchmark.request(:get, "/posts/new")
