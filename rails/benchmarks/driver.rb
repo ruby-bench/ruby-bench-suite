@@ -32,7 +32,7 @@ Dir["#{File.expand_path(File.dirname(__FILE__))}/*"].select! { |path| path =~ /b
     'benchmark_type[script_url]' => "#{RAW_URL}#{Pathname.new(path).basename}",
     'benchmark_run[environment]' => "#{`ruby -v`}",
     'repo' => 'rails',
-    'organization' => 'ruby'
+    'organization' => 'rails'
   }.merge(initiator_hash).merge(results))
 
   http.request(request)
