@@ -6,9 +6,9 @@ require 'json'
 require 'pathname'
 RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/ruby/benchmarks/'
 
-Dir["#{File.expand_path(File.dirname(__FILE__))}/*"].select! { |path| path =~ /bm_+/ }.each do |path|
+Dir["#{File.expand_path(File.dirname(__FILE__))}/*"].select! { |path| path =~ /bm_.+/ }.each do |path|
   # FIXME: ` provides the full output but it'll return failed output as well.
-  output = JSON.parse(`DATABASE_URL=#{ENV['DATABASE_URL']} ruby #{path}`)
+  output = JSON.parse(`ruby #{path}`)
 
   http = Net::HTTP.new(ENV["API_URL"] || 'rubybench.org')
   request = Net::HTTP::Post.new('/benchmark_runs')
