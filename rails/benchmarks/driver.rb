@@ -4,7 +4,7 @@
 require 'net/http'
 require 'json'
 require 'pathname'
-RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/ruby/benchmarks/'
+RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/rails/benchmarks/'
 
 Dir["#{File.expand_path(File.dirname(__FILE__))}/*"].select! { |path| path =~ /bm_.+/ }.each do |path|
   # FIXME: ` provides the full output but it'll return failed output as well.
