@@ -35,6 +35,6 @@ User.create!(name: 'kir', email: 'shatrov@me.com')
 Benchmark.rails("activerecord/sqlite3_finders", time: 10) do
   User.first
   User.find(1)
-  User.find_by(email: 'shatrov@me.com')
-  User.find_by(name: 'kir')
+  User.find_by_email('shatrov@me.com')
+  User.find_by_name('kir')
 end
