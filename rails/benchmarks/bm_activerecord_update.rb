@@ -29,6 +29,5 @@ attributes = {
 user = User.create!(attributes)
 
 Benchmark.rails("activerecord/sqlite3_update", time: 10) do
-  user.update(name: 'bob')
-  user.update_attributes(name: 'mary')
+  user.update_attributes(name: 'mary', email: "tom@email.com")
 end
