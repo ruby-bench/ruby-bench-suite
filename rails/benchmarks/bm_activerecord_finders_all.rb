@@ -29,8 +29,7 @@ admin = true
   attributes = {
     name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     email: "foobar@email.com",
-    admin: admin,
-    created_at: Date.today
+    admin: admin
   }
 
   User.create!(attributes)

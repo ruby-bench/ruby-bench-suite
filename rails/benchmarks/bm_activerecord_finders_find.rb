@@ -22,8 +22,7 @@ class User < ActiveRecord::Base; end
 
 attributes = {
   name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  email: "foobar@email.com",
-  created_at: Date.today
+  email: "foobar@email.com"
 }
 
 1000.times do
