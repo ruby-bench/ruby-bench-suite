@@ -14,8 +14,10 @@ module Benchmark
         GC.enable
       end
 
-      report = Benchmark.ips(time, warmup, true) do |x|
-        x.report(label) { yield }
+      total_allocated_objects = get_total_allocated_objects do
+        report = Benchmark.ips(time, warmup, true) do |x|
+          x.report(label) { yield }
+        end
       end
 
       entry = report.entries.first
@@ -25,7 +27,7 @@ module Benchmark
         version: ::Rails.version.to_s,
         iterations_per_second: entry.ips,
         iterations_per_second_standard_deviation: entry.stddev_percentage,
-        total_allocated_objects_per_iteration: get_total_allocated_objects(&block)
+        total_allocated_objects: total_allocated_objects
       }.to_json
 
       puts output
