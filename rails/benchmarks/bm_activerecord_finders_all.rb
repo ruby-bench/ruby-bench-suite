@@ -37,6 +37,6 @@ admin = true
   admin = !admin
 end
 
-Benchmark.rails("activerecord/sqlite3_finders", time: 10) do
+Benchmark.rails("activerecord/sqlite3_finders_all", time: 10) do
   User.all
 end
