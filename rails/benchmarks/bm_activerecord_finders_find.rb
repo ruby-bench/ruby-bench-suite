@@ -30,11 +30,6 @@ attributes = {
   User.create!(attributes)
 end
 
-User.create!(name: 'kir', email: 'shatrov@me.com')
-
-Benchmark.rails("activerecord/sqlite3_finders", time: 10) do
-  User.first
-  User.find(1)
-  User.find_by_email('shatrov@me.com')
-  User.find_by_name('kir')
+Benchmark.rails("activerecord/sqlite3_finders_find", time: 10) do
+  User.find(50)
 end
