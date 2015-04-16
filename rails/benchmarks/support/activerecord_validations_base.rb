@@ -6,7 +6,7 @@ require 'active_record'
 require 'sqlite3'
 require 'ffaker'
 
-ActiveRecord::Base.establish_connection(adapter: 'sqlite3', database: ':memory:')
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do

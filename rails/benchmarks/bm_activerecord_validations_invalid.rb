@@ -1,42 +1,5 @@
-require 'bundler/setup'
-require 'rails'
-require 'active_record'
-
+require_relative 'support/activerecord_validations_base.rb'
 require_relative 'support/benchmark_rails.rb'
-
-class Post < ActiveRecord::Base; end
-
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: ':memory:'
-)
-
-ActiveRecord::Migration.verbose = false
-
-ActiveRecord::Schema.define do
-  create_table :posts, force: true do |t|
-    t.string :title
-    t.string :author
-    t.text :body
-    t.integer :sequence
-    t.integer :age
-    t.string :subdomain
-    t.string :legacy_code
-    t.string :size
-  end
-end
-
-class Post < ActiveRecord::Base
-  validates :title, presence: true, confirmation: true
-  validates :sequence, uniqueness: true
-  validates :age, numericality: { greater_than: 18, less_than: 80 }
-  validates :subdomain, exclusion: { in: %w(www us ca jp),
-    message: "%{value} is reserved." }
-  validates :legacy_code, format: { with: /\A[a-zA-Z]+\z/,
-    message: "only allows letters" }
-  validates :size, inclusion: { in: %w(small medium large),
-    message: "%{value} is not a valid size" }
-end
 
 post = Post.new({
   title: '',
@@ -48,7 +11,7 @@ post = Post.new({
   size: 'overbig'
 })
 
-Benchmark.rails("activerecord_validations_invalid", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_validations_invalid", time: 10) do
   if post.valid?
     raise "should not be valid"
   end
