@@ -14,21 +14,29 @@ ActiveRecord::Migration.verbose = false
 ActiveRecord::Schema.define do
   create_table :users, force: true do |t|
     t.string :name, :email
+    t.boolean :admin
     t.timestamps null: false
   end
 end
 
-class User < ActiveRecord::Base; end
-
-attributes = {
-  name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-  email: "foobar@email.com"
-}
-
-1000.times do
-  User.create!(attributes)
+class User < ActiveRecord::Base
+  default_scope { where(admin: true) }
 end
 
-Benchmark.rails("activerecord/sqlite3_finders_all", time: 10) do
+admin = true
+
+1000.times do
+  attributes = {
+    name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    email: "foobar@email.com",
+    admin: admin
+  }
+
+  User.create!(attributes)
+
+  admin = !admin
+end
+
+Benchmark.rails("activerecord/sqlite3_finders_all_with_default_scope", time: 10) do
   User.all.to_a
 end
