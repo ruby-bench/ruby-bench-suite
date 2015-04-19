@@ -244,10 +244,11 @@ class BenchmarkDriver
                 temp << line
               end
             end
+
+            File.copy_stream(temp, file)
           ensure
             temp.close
           end
-          File.copy_stream(temp, file)
         else
           File.open(file, 'a') do |f|
             f << "mem = `ps -o rss= -p \#\{$$\}`.to_i\n"
