@@ -3,6 +3,8 @@ require 'bundler/setup'
 require 'rails'
 require 'active_record'
 
+require_relative './helpers.rb'
+
 SEED_COUNT = (ENV['SEED_COUNT'] || 1000).to_i
 
 class User < ActiveRecord::Base
@@ -48,10 +50,6 @@ module ActiveRecord
     end
   end
 
-end
-
-def db_adapter
-  ENV['DATABASE_URL'].split(":")[0]
 end
 
 ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])

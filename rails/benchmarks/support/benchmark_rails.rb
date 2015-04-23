@@ -1,6 +1,8 @@
 require 'benchmark/ips'
 require 'json'
 
+require_relative 'helpers.rb'
+
 module Benchmark
   module Rails
     def rails(label=nil, time:, disable_gc: true, warmup: 3, &block)

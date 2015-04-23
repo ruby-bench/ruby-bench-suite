@@ -4,10 +4,7 @@ require 'active_record'
 
 require_relative 'support/benchmark_rails.rb'
 
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: ':memory:'
-)
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 
 ActiveRecord::Migration.verbose = false
 
@@ -25,7 +22,8 @@ attributes = {
   email: "foobar@email.com"
 }
 
-Benchmark.rails("activerecord/sqlite3_destroy", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_destroy", time: 10) do
+  # we need to create the record in order to delete it
   user = User.create!(attributes)
   user.destroy
 end
