@@ -4,10 +4,7 @@ require 'active_record'
 
 require_relative 'support/benchmark_rails.rb'
 
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: ':memory:'
-)
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 
 ActiveRecord::Migration.verbose = false
 
@@ -25,6 +22,6 @@ attributes = {
   email: "foobar@email.com"
 }
 
-Benchmark.rails("activerecord/sqlite3_create", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_create", time: 10) do
   User.create(attributes)
 end

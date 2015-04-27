@@ -1,19 +1,13 @@
-require_relative 'support/activerecord_validations_base.rb'
-require_relative 'support/benchmark_rails.rb'
-
 require 'bundler/setup'
-require 'rails'
-require 'active_record'
 
 require_relative 'support/benchmark_rails.rb'
 
-class Post < ActiveRecord::Base; end
+require 'rails'
+require 'action_controller/railtie'
+require 'active_record'
+require 'sqlite3'
 
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: ':memory:'
-)
-
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do
@@ -30,6 +24,8 @@ ActiveRecord::Schema.define do
 end
 
 class Post < ActiveRecord::Base
+  attr_accessor :title_confirmation
+
   validates :title, presence: true, confirmation: true
   validates :sequence, uniqueness: true
   validates :age, numericality: { greater_than: 18, less_than: 80 }
@@ -61,7 +57,7 @@ post = Post.new({
   size: 'small'
 })
 
-Benchmark.rails("activerecord_validations_valid", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_validations_valid", time: 10) do
   unless post.valid?
     raise "should be valid"
   end

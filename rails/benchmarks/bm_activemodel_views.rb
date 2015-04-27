@@ -2,8 +2,6 @@ require 'bundler/setup'
 
 require_relative 'support/benchmark_rails.rb'
 
-require 'ffaker'
-
 require 'rails'
 require 'action_controller/railtie'
 require 'active_model'
@@ -38,11 +36,11 @@ def user_factory
   { email: Faker::Internet.email }
 end
 
+current = File.expand_path File.dirname(__FILE__)
 Benchmark.rails("actionview_render_activemodels", time: 10) do
   controller = HeavyController.new
   controller.request = ActionDispatch::Request.new({})
 
-  current = File.expand_path File.dirname(__FILE__)
   view = HeavyView.new("#{current}/form_partials", {}, controller)
 
   locals = {
