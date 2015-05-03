@@ -4,10 +4,7 @@ require 'active_record'
 
 require_relative 'support/benchmark_rails.rb'
 
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: ':memory:'
-)
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 
 ActiveRecord::Migration.verbose = false
 
