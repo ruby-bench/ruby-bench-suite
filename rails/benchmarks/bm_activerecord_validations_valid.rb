@@ -5,7 +5,6 @@ require_relative 'support/benchmark_rails.rb'
 require 'rails'
 require 'action_controller/railtie'
 require 'active_record'
-require 'sqlite3'
 
 ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 ActiveRecord::Migration.verbose = false
@@ -24,8 +23,6 @@ ActiveRecord::Schema.define do
 end
 
 class Post < ActiveRecord::Base
-  attr_accessor :title_confirmation
-
   validates :title, presence: true, confirmation: true
   validates :sequence, uniqueness: true
   validates :age, numericality: { greater_than: 18, less_than: 80 }
