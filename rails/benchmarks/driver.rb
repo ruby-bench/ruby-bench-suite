@@ -8,8 +8,15 @@ require 'optparse'
 
 RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/rails/benchmarks/'
 
+sqlite3_url =
+  if Rails.version < '4.1.0'
+    'sqlite3:/:memory:'
+  else
+    'sqlite3::memory:'
+  end
+
 ORMS = [
-  "sqlite3://:@localhost/:memory:",
+  sqlite3_url,
   "postgres://postgres@#{ENV['POSTGRES_PORT_5432_TCP_ADDR']}:#{ENV['POSTGRES_PORT_5432_TCP_PORT']}/rubybench",
   "mysql://rubybench@#{ENV['MYSQL_PORT_3306_TCP_ADDR']}:#{ENV['MYSQL_PORT_3306_TCP_PORT']}/rubybench",
 ]
