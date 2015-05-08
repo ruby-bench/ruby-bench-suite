@@ -29,23 +29,30 @@ class User
 end
 
 def post_factory
-  { title: Faker::Name.name, from: Faker::AddressFI.city, body: Faker::HipsterIpsum.words(50).join(" ") }
+  {
+    title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+    from: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+    body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+  }
 end
 
 def user_factory
-  { email: Faker::Internet.email }
+  {
+    email: 'test@example.com'
+  }
 end
 
-current = File.expand_path File.dirname(__FILE__)
+current_path = File.expand_path File.dirname(__FILE__)
+controller = HeavyController.new
+controller.request = ActionDispatch::Request.new({})
+
+locals = {
+  posts: (1..50).to_a.map { Post.new(post_factory) },
+  users: (1..50).to_a.map { User.new(user_factory) }
+}
+
+view = HeavyView.new("#{current_path}/form_partials", {}, controller)
+
 Benchmark.rails("actionview_render_activemodels", time: 10) do
-  controller = HeavyController.new
-  controller.request = ActionDispatch::Request.new({})
-
-  view = HeavyView.new("#{current}/form_partials", {}, controller)
-
-  locals = {
-    posts: (1..50).to_a.map { |a| Post.new(post_factory) },
-    users: (1..50).to_a.map { |a| User.new(user_factory) },
-  }
   view.render(template: "first", layout: "layouts/application", locals: locals)
 end
