@@ -23,7 +23,7 @@ mysql_port = ENV['MYSQL_PORT_3306_TCP_PORT'] || 3306
 ORMS = [
   sqlite3_url,
   "postgres://postgres@#{postgres_tcp_addr}:#{postgres_port}/rubybench",
-  "mysql://root@#{mysql_tcp_addr}:#{mysql_port}/rubybench",
+  "mysql2://root@#{mysql_tcp_addr}:#{mysql_port}/rubybench",
 ]
 
 class BenchmarkDriver
