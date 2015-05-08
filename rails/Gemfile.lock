@@ -71,6 +71,9 @@ GEM
       activesupport (>= 4.1.0)
     hike (1.2.3)
     i18n (0.7.0)
+    jbuilder (2.2.12)
+      activesupport (>= 3.0.0, < 5)
+      multi_json (~> 1.2)
     json (1.8.2)
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
@@ -119,6 +122,7 @@ PLATFORMS
 DEPENDENCIES
   arel!
   ffaker
+  jbuilder
   mysql2
   pg
   rails!
