@@ -1,17 +1,31 @@
 #
 # Rails Benchmark driver
 #
+require 'bundler/setup'
 require 'net/http'
 require 'json'
 require 'pathname'
 require 'optparse'
+require 'rails'
 
 RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/rails/benchmarks/'
 
-ORMS = [
-  "sqlite3://:@localhost/:memory:",
-  "postgres://postgres@#{ENV['POSTGRES_PORT_5432_TCP_ADDR']}:#{ENV['POSTGRES_PORT_5432_TCP_PORT']}/rubybench",
-  "mysql://rubybench@#{ENV['MYSQL_PORT_3306_TCP_ADDR']}:#{ENV['MYSQL_PORT_3306_TCP_PORT']}/rubybench",
+sqlite3_url =
+  if Rails.version < '4.1.0'
+    'sqlite3:/:memory:'
+  else
+    'sqlite3::memory:'
+  end
+
+postgres_tcp_addr = ENV['POSTGRES_PORT_5432_TCP_ADDR'] || 'localhost'
+postgres_port = ENV['POSTGRES_PORT_5432_TCP_PORT'] || 5432
+mysql_tcp_addr = ENV['MYSQL_PORT_3306_TCP_ADDR'] || 'localhost'
+mysql_port = ENV['MYSQL_PORT_3306_TCP_PORT'] || 3306
+
+DATABASE_URLS = [
+  sqlite3_url,
+  "postgres://postgres@#{postgres_tcp_addr}:#{postgres_port}/rubybench",
+  "mysql2://root@#{mysql_tcp_addr}:#{mysql_port}/rubybench",
 ]
 
 class BenchmarkDriver
@@ -25,8 +39,8 @@ class BenchmarkDriver
 
   def run
     files.each do |path|
-      if path.match(/activerecord/)
-        ORMS.each do |url|
+      if path.match(/activerecord|app/)
+        DATABASE_URLS.each do |url|
           run_single(path, connection: url)
         end
       else
