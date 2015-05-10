@@ -21,7 +21,7 @@ postgres_port = ENV['POSTGRES_PORT_5432_TCP_PORT'] || 5432
 mysql_tcp_addr = ENV['MYSQL_PORT_3306_TCP_ADDR'] || 'localhost'
 mysql_port = ENV['MYSQL_PORT_3306_TCP_PORT'] || 3306
 
-ORMS = [
+DATABASE_URLS = [
   sqlite3_url,
   "postgres://postgres@#{postgres_tcp_addr}:#{postgres_port}/rubybench",
   "mysql2://root@#{mysql_tcp_addr}:#{mysql_port}/rubybench",
@@ -39,7 +39,7 @@ class BenchmarkDriver
   def run
     files.each do |path|
       if path.match(/activerecord|app/)
-        ORMS.each do |url|
+        DATABASE_URLS.each do |url|
           run_single(path, connection: url)
         end
       else
