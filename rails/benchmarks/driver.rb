@@ -1,6 +1,7 @@
 #
 # Rails Benchmark driver
 #
+require 'bundler/setup'
 require 'net/http'
 require 'json'
 require 'pathname'
