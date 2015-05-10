@@ -1,5 +1,4 @@
 require 'bundler/setup'
-require 'rails'
 require 'active_record'
 require_relative 'support/benchmark_rails'
 

@@ -1,5 +1,4 @@
 require 'bundler/setup'
-require 'rails'
 require 'action_controller/railtie'
 require 'active_model'
 require_relative 'support/benchmark_rails'
