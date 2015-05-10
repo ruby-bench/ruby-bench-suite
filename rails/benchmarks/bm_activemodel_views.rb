@@ -1,10 +1,8 @@
 require 'bundler/setup'
-
-require_relative 'support/benchmark_rails.rb'
-
 require 'rails'
 require 'action_controller/railtie'
 require 'active_model'
+require_relative 'support/benchmark_rails'
 
 class HeavyController < ActionController::Base
   def index;end

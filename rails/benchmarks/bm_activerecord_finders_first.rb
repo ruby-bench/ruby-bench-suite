@@ -1,8 +1,7 @@
 require 'bundler/setup'
 require 'rails'
 require 'active_record'
-
-require_relative 'support/benchmark_rails.rb'
+require_relative 'support/benchmark_rails'
 
 ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 

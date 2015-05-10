@@ -1,10 +1,8 @@
 require 'bundler/setup'
-
-require_relative 'support/benchmark_rails.rb'
-
 require 'rails'
 require 'action_controller/railtie'
 require 'active_record'
+require_relative 'support/benchmark_rails'
 
 ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 ActiveRecord::Migration.verbose = false
