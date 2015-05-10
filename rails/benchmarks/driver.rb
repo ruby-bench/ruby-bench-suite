@@ -5,6 +5,7 @@ require 'net/http'
 require 'json'
 require 'pathname'
 require 'optparse'
+require 'rails'
 
 RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/rails/benchmarks/'
 
@@ -37,7 +38,7 @@ class BenchmarkDriver
 
   def run
     files.each do |path|
-      if path.match(/activerecord/)
+      if path.match(/activerecord|app/)
         ORMS.each do |url|
           run_single(path, connection: url)
         end
