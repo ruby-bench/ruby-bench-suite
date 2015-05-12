@@ -2,11 +2,7 @@ require 'bundler/setup'
 require 'active_record'
 require_relative 'support/benchmark_rails'
 
-ActiveRecord::Base.establish_connection(
-  adapter: 'sqlite3',
-  database: ':memory:'
-)
-
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
 ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do
@@ -44,7 +40,7 @@ post = Post.new({
   size: 'overbig'
 })
 
-Benchmark.rails("activerecord/activerecord_validations_invalid", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_validations_invalid", time: 10) do
   if post.valid?
     raise "should not be valid"
   end
