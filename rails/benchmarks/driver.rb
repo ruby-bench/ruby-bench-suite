@@ -116,7 +116,8 @@ class BenchmarkDriver
 end
 
 options = {
-  repeat_count: 1
+  repeat_count: 1,
+  pattern: []
 }
 
 OptionParser.new do |opts|
