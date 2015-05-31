@@ -20,7 +20,7 @@ attributes = {
 
 class User < ActiveRecord::Base; end
 
-Benchmark.rails("activerecord/#{db_adapter}_save", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_save", time: 5) do
   user = User.new(attributes)
 
   unless user.save

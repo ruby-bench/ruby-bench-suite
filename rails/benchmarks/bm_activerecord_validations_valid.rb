@@ -50,7 +50,7 @@ post = Post.new({
   size: 'small'
 })
 
-Benchmark.rails("activerecord/#{db_adapter}_validations_valid", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_validations_valid", time: 5) do
   unless post.valid?
     raise "should be valid"
   end

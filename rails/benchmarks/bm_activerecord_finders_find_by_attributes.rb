@@ -26,6 +26,6 @@ end
 
 User.create!(name: 'kir', email: 'shatrov@me.com')
 
-Benchmark.rails("activerecord/#{db_adapter}_finders_find_by_attributes", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_finders_find_by_attributes", time: 5) do
   User.find_by_email('shatrov@me.com')
 end

@@ -20,7 +20,7 @@ attributes = {
   email: "foobar@email.com"
 }
 
-Benchmark.rails("activerecord/#{db_adapter}_destroy", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_destroy", time: 5) do
   # we need to create the record in order to delete it
   user = User.create!(attributes)
   user.destroy

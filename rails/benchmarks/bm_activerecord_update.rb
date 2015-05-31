@@ -22,6 +22,6 @@ attributes = {
 
 user = User.create!(attributes)
 
-Benchmark.rails("activerecord/#{db_adapter}_update", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_update", time: 5) do
   user.update_attributes(name: 'mary', email: "tom@email.com")
 end

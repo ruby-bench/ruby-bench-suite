@@ -24,6 +24,6 @@ attributes = {
   User.create!(attributes)
 end
 
-Benchmark.rails("activerecord/#{db_adapter}_finders_first", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_finders_first", time: 5) do
   User.first
 end

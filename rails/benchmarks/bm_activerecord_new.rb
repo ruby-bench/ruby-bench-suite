@@ -20,7 +20,7 @@ attributes = {
   email: "foobar@email.com"
 }
 
-Benchmark.rails("activerecord/#{db_adapter}_new", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_new", time: 5) do
   User.new
   User.new(attributes)
 end

@@ -40,7 +40,7 @@ post = Post.new({
   size: 'overbig'
 })
 
-Benchmark.rails("activerecord/#{db_adapter}_validations_invalid", time: 10) do
+Benchmark.rails("activerecord/#{db_adapter}_validations_invalid", time: 5) do
   if post.valid?
     raise "should not be valid"
   end
