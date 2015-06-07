@@ -10,8 +10,9 @@ ActiveRecord::Schema.define do
   create_table :users, force: true do |t|
     t.string :name, :email
     t.timestamps null: false
-    t.index :email, unique: true
   end
+
+  add_index :users, :email, unique: true
 end
 
 class User < ActiveRecord::Base; end
