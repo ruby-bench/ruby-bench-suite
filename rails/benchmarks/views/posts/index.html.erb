@@ -8,7 +8,6 @@
       <th>Title</th>
       <th>Body</th>
       <th>Author</th>
-      <th>Comments total</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -20,7 +19,6 @@
         <td><%= post.title %></td>
         <td><%= post.body %></td>
         <td><%= post.author %></td>
-        <td><%= post.comments.count %></td>
         <td><%= link_to 'Show', post %></td>
         <td><%= link_to 'Edit', edit_post_path(post) %></td>
         <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
