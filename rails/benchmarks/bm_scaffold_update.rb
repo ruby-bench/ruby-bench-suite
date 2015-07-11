@@ -2,7 +2,6 @@ require 'bundler/setup'
 require 'rails'
 require 'action_controller/railtie'
 require 'active_record'
-require 'strong_parameters'
 require_relative 'support/benchmark_rails'
 
 ENV['RAILS_ENV'] = 'production'
@@ -82,9 +81,7 @@ Rails.application.routes.draw do
   resources :posts
 end
 
-class Post < ActiveRecord::Base
-  include ActiveModel::ForbiddenAttributesProtection
-end
+class Post < ActiveRecord::Base; end
 
 ActionController::Base.prepend_view_path File.expand_path("../views", __FILE__)
 

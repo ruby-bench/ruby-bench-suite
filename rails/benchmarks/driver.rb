@@ -42,7 +42,7 @@ class BenchmarkDriver
     files.each do |path|
       next if !@pattern.empty? && /#{@pattern.join('|')}/ !~ File.basename(path)
 
-      if path.match(/activerecord|app/)
+      if path.match(/activerecord|scaffold/)
         DATABASE_URLS.each do |url|
           run_single(path, connection: url)
         end
