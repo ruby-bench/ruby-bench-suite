@@ -126,4 +126,4 @@ Post.create!(
   author: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
 )
 
-Benchmark.rails("request/scaffold_update", time: 5) { App.request }
+Benchmark.rails("request/#{db_adapter}_scaffold_update", time: 5) { App.request }

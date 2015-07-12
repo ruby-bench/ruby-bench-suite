@@ -99,4 +99,4 @@ end
   )
 end
 
-Benchmark.rails("request/scaffold_index", time: 5) { App.request }
+Benchmark.rails("request/#{db_adapter}_scaffold_index", time: 5) { App.request }

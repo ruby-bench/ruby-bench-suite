@@ -2,7 +2,6 @@ require 'bundler/setup'
 require 'rails'
 require 'action_controller/railtie'
 require 'active_record'
-
 require_relative 'support/benchmark_rails'
 
 ENV['RAILS_ENV'] = 'production'
@@ -111,4 +110,4 @@ class PostsController < ActionController::Base
   end
 end
 
-Benchmark.rails("request/scaffold_create", time: 5) { App.request }
+Benchmark.rails("request/#{db_adapter}_scaffold_create", time: 5) { App.request }
