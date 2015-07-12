@@ -99,4 +99,4 @@ class PostsController < ActionController::Base
   end
 end
 
-Benchmark.rails("request/scaffold_create", time: 5) { App.request }
+Benchmark.rails("request/scaffold_show", time: 5) { App.request }
