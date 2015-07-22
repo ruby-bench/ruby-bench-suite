@@ -7,26 +7,19 @@ require 'json'
 require 'pathname'
 require 'optparse'
 require 'rails'
+require 'digest'
 
 RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/rails/benchmarks/'
-
-sqlite3_url =
-  if Rails.version < '4.1.0'
-    'sqlite3:/:memory:'
-  else
-    'sqlite3::memory:'
-  end
 
 postgres_tcp_addr = ENV['POSTGRES_PORT_5432_TCP_ADDR'] || 'localhost'
 postgres_port = ENV['POSTGRES_PORT_5432_TCP_PORT'] || 5432
 mysql_tcp_addr = ENV['MYSQL_PORT_3306_TCP_ADDR'] || 'localhost'
 mysql_port = ENV['MYSQL_PORT_3306_TCP_PORT'] || 3306
 
-DATABASE_URLS = [
-  sqlite3_url,
-  "postgres://postgres@#{postgres_tcp_addr}:#{postgres_port}/rubybench",
-  "mysql2://root@#{mysql_tcp_addr}:#{mysql_port}/rubybench",
-]
+DATABASE_URLS = {
+  psql: "postgres://postgres@#{postgres_tcp_addr}:#{postgres_port}/rubybench",
+  mysql: "mysql2://root@#{mysql_tcp_addr}:#{mysql_port}/rubybench",
+}
 
 class BenchmarkDriver
   def self.benchmark(options)
@@ -43,8 +36,8 @@ class BenchmarkDriver
       next if !@pattern.empty? && /#{@pattern.join('|')}/ !~ File.basename(path)
 
       if path.match(/activerecord|scaffold/)
-        DATABASE_URLS.each do |url|
-          run_single(path, connection: url)
+        DATABASE_URLS.each do |database, url|
+          run_single(path, connection: url, database: database)
         end
       else
         run_single(path)
@@ -58,7 +51,7 @@ class BenchmarkDriver
     Dir["#{File.expand_path(File.dirname(__FILE__))}/*"].select! { |path| path =~ /bm_.+/ }
   end
 
-  def run_single(path, connection: nil)
+  def run_single(path, connection: nil, database: nil)
     script = "RAILS_ENV=production ruby #{path}"
     if connection
       script = "DATABASE_URL=#{connection} #{script}"
@@ -80,6 +73,7 @@ class BenchmarkDriver
     submit = {
       'benchmark_type[category]' => output["label"],
       'benchmark_type[script_url]' => "#{RAW_URL}#{Pathname.new(path).basename}",
+      'benchmark_type[digest]' => generate_digest(path, database),
       'benchmark_run[environment]' => "#{`ruby -v`}",
       'repo' => 'rails',
       'organization' => 'rails'
@@ -109,6 +103,19 @@ class BenchmarkDriver
 
   def endpoint
     @endpoint ||= Net::HTTP.new(ENV["API_URL"] || 'rubybench.org')
+  end
+
+  def generate_digest(path, database)
+    string = "#{File.read(path)}#{`ruby -v`}"
+
+    case database
+    when 'psql'
+      string = "#{string}#{ENV['POSTGRES_ENV_PG_VERSION']}"
+    when 'mysql'
+      string = "#{string}#{ENV['MYSQL_ENV_MYSQL_VERSION']}"
+    end
+
+    Digest::SHA2.hexdigest(string)
   end
 
   def measure(script)
