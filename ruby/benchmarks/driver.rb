@@ -165,8 +165,9 @@ class BenchmarkDriver
       end
 
       request.set_form_data({
+        'benchmark_result_type[name]' => 'Execution time',
+        'benchmark_result_type[unit]' => 'Seconds',
         'benchmark_type[category]' => v,
-        'benchmark_type[unit]' => 'seconds',
         'benchmark_type[script_url]' => "#{RAW_URL}#{v}.rb",
         "benchmark_run[result][#{v}]" => rets.first,
         'benchmark_run[environment]' => @execs.map { |(_,v)| v }.first,

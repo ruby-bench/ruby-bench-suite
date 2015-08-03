@@ -51,20 +51,31 @@ class BenchmarkDriver
       initiator_hash['version'] = ENV['BUNDLER_VERSION']
     end
 
-    results = {
-      "benchmark_run[result][iterations_per_second]" => output["iterations_per_second"].round(3),
-      "benchmark_run[result][total_allocated_objects_per_iteration]" => output["total_allocated_objects_per_iteration"]
-    }
-
     submit = {
       'benchmark_type[category]' => output["label"],
-      'benchmark_type[unit]' => 'iterations per second',
       'benchmark_type[script_url]' => "#{RAW_URL}#{path.basename}",
       'benchmark_run[environment]' => "#{`ruby -v`.strip}",
       'repo' => 'bundler',
       'organization' => 'bundler'
-    }.merge(initiator_hash).merge(results)
-    request.set_form_data(submit)
+    }.merge(initiator_hash)
+
+    request.set_form_data(submit.merge(
+      {
+        "benchmark_run[result][iterations_per_second]" => output["iterations_per_second"].round(3),
+        'benchmark_result_type[name]' => 'Number of iterations per second',
+        'benchmark_result_type[unit]' => 'Iterations per second'
+      }
+    ))
+
+    endpoint.request(request)
+
+    request.set_form_data(submit.merge(
+      {
+        "benchmark_run[result][total_allocated_objects_per_iteration]" => output["total_allocated_objects_per_iteration"],
+        'benchmark_result_type[name]' => 'Allocated objects',
+        'benchmark_result_type[unit]' => 'Objects'
+      }
+    ))
 
     endpoint.request(request)
     puts "Posting results to Web UI...."
