@@ -146,8 +146,9 @@ class BenchmarkDriver
       end
 
       request.set_form_data({
-        'benchmark_type[category]' => "#{v}_memory",
-        'benchmark_type[unit]' => 'kilobytes',
+        'benchmark_result_type[name]' => 'RSS memory usage',
+        'benchmark_result_type[unit]' => 'Kilobtyes',
+        'benchmark_type[category]' => v,
         'benchmark_type[script_url]' => "#{RAW_URL}#{v}.rb",
         "benchmark_run[result][rss_kb]" => rets,
         'benchmark_run[environment]' => @execs.map { |(_,v)| v }.first,
