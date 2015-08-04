@@ -173,6 +173,10 @@ def bench(path)
   percentiles
 end
 
+def generate_digest
+  Digest::SHA2.hexdigest("#{ENV['POSTGRES_ENV_PG_VERSION']}#{ENV['REDIS_ENV_REDIS_VERSION']}#{ENV['DISCOURSE_COMMIT_HASH']}")
+end
+
 begin
   # critical cause cache may be incompatible
   puts "precompiling assets"
@@ -311,6 +315,7 @@ begin
       'benchmark_type[category]' => "discourse_#{category}",
       'benchmark_type[unit]' => 'milliseconds',
       'benchmark_type[script_url]' => "https://raw.githubusercontent.com/discourse/discourse/#{ENV['DISCOURSE_COMMIT_HASH']}/script/bench.rb",
+      'benchmark_type[digest]' => generate_digest,
       'benchmark_run[environment]' => environment.to_yaml,
       'version' => ENV['RUBY_VERSION'],
       'repo' => 'ruby',
