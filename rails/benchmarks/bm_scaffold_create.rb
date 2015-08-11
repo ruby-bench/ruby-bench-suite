@@ -4,13 +4,6 @@ require 'action_controller/railtie'
 require 'active_record'
 require_relative 'support/benchmark_rails'
 
-ENV['RAILS_ENV'] = 'production'
-
-class NullLogger < Logger
-  def initialize(*args);end
-  def add(*args, &block);end
-end
-
 class App
   ENV = {
     "GATEWAY_INTERFACE" => "CGI/1.1",
@@ -59,8 +52,6 @@ class ScaffoldApp < Rails::Application
   config.log_formatter = ::Logger::Formatter.new
   # otherwise deadlock occurs
   config.middleware.delete "Rack::Lock"
-  # Disable log files
-  config.logger = NullLogger.new
 end
 
 ScaffoldApp.initialize!

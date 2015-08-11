@@ -5,6 +5,7 @@ require 'net/http'
 require 'json'
 require 'pathname'
 require 'optparse'
+require 'digest'
 
 RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/bundler/benchmarks/'
 
@@ -54,6 +55,7 @@ class BenchmarkDriver
     submit = {
       'benchmark_type[category]' => output["label"],
       'benchmark_type[script_url]' => "#{RAW_URL}#{path.basename}",
+      'benchmark_type[digest]' => generate_digest(path),
       'benchmark_run[environment]' => "#{`ruby -v`.strip}",
       'repo' => 'bundler',
       'organization' => 'bundler'
@@ -79,6 +81,10 @@ class BenchmarkDriver
 
     endpoint.request(request)
     puts "Posting results to Web UI...."
+  end
+
+  def generate_digest(path)
+    Digest::SHA2.hexdigest("#{File.read(path)}#{`ruby -v; gem -v`}")
   end
 
   def endpoint

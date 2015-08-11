@@ -2,6 +2,7 @@
 # Ruby Benchmark driver
 #
 require 'net/http'
+require 'digest'
 RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/ruby/benchmarks/bm_'
 first = true
 
@@ -169,6 +170,7 @@ class BenchmarkDriver
         'benchmark_result_type[unit]' => 'Seconds',
         'benchmark_type[category]' => v,
         'benchmark_type[script_url]' => "#{RAW_URL}#{v}.rb",
+        'benchmark_type[digest]' => generate_digest(v),
         "benchmark_run[result][#{v}]" => rets.first,
         'benchmark_run[environment]' => @execs.map { |(_,v)| v }.first,
         'repo' => 'ruby',
@@ -206,6 +208,10 @@ class BenchmarkDriver
       output
       output "Log file: #{@opt[:output]}"
     end
+  end
+
+  def generate_digest(name)
+    Digest::SHA2.file("#{File.dirname(__FILE__)}/bm_#{name}.rb").hexdigest
   end
 
   def files
