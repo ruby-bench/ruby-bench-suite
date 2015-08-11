@@ -283,8 +283,8 @@ begin
   request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
 
   request.set_form_data({
-    'benchmark_result_type[name]' => 'Response time',
-    'benchmark_result_type[unit]' => 'Millieseconds',
+    'benchmark_result_type[name]' => 'RSS memory usage',
+    'benchmark_result_type[unit]' => 'Kilobtyes',
     'benchmark_type[category]' => "discourse_memory_usage",
     'benchmark_type[script_url]' => "https://raw.githubusercontent.com/discourse/discourse/#{ENV['DISCOURSE_COMMIT_HASH']}/script/bench.rb",
     'benchmark_run[environment]' => environment.to_yaml,
@@ -308,8 +308,9 @@ begin
     request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
 
     request.set_form_data({
+      'benchmark_result_type[name]' => 'Response time',
+      'benchmark_result_type[unit]' => 'Millieseconds',
       'benchmark_type[category]' => "discourse_#{category}",
-      'benchmark_type[unit]' => 'milliseconds',
       'benchmark_type[script_url]' => "https://raw.githubusercontent.com/discourse/discourse/#{ENV['DISCOURSE_COMMIT_HASH']}/script/bench.rb",
       'benchmark_run[environment]' => environment.to_yaml,
       'version' => ENV['RUBY_VERSION'],
