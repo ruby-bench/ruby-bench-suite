@@ -56,7 +56,7 @@ class BenchmarkDriver
       'benchmark_type[category]' => output["label"],
       'benchmark_type[script_url]' => "#{RAW_URL}#{path.basename}",
       'benchmark_type[digest]' => generate_digest(path),
-      'benchmark_run[environment]' => "#{`ruby -v`.strip}",
+      'benchmark_run[environment]' => "#{`ruby -v; gem -v`.strip}",
       'repo' => 'bundler',
       'organization' => 'bundler'
     }.merge(initiator_hash)
