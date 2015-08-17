@@ -4,6 +4,7 @@ require "yaml"
 require "optparse"
 require "fileutils"
 require 'net/http'
+require 'digest'
 
 @include_env = false
 @result_file = nil
