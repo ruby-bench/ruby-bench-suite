@@ -285,6 +285,12 @@ begin
   form_results = {}
   form_results["benchmark_run[result][rss_kb]"] = mem
 
+  if ENV['RUBY_COMMIT_HASH']
+    form_results["commit_hash"] = ENV['RUBY_COMMIT_HASH']
+  elsif ENV['RUBY_VERSION']
+    form_results["version"] = ENV['RUBY_VERSION']
+  end
+
   request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
 
   request.set_form_data({
@@ -294,7 +300,6 @@ begin
     'benchmark_type[script_url]' => "https://raw.githubusercontent.com/discourse/discourse/#{ENV['DISCOURSE_COMMIT_HASH']}/script/bench.rb",
     'benchmark_type[digest]' => generate_digest,
     'benchmark_run[environment]' => environment.to_yaml,
-    'version' => ENV['RUBY_COMMIT_HASH'] || ENV['RUBY_VERSION'],
     'repo' => 'ruby',
     'organization' => 'ruby'
   }.merge(form_results))
@@ -307,6 +312,13 @@ begin
     request = Net::HTTP::Post.new('/benchmark_runs')
 
     form_results = {}
+
+    if ENV['RUBY_COMMIT_HASH']
+      form_results["commit_hash"] = ENV['RUBY_COMMIT_HASH']
+    elsif ENV['RUBY_VERSION']
+      form_results["version"] = ENV['RUBY_VERSION']
+    end
+
     result.each do |key, value|
       form_results["benchmark_run[result][#{key} percentile]"] = value
     end
@@ -320,7 +332,6 @@ begin
       'benchmark_type[script_url]' => "https://raw.githubusercontent.com/discourse/discourse/#{ENV['DISCOURSE_COMMIT_HASH']}/script/bench.rb",
       'benchmark_type[digest]' => generate_digest,
       'benchmark_run[environment]' => environment.to_yaml,
-      'version' => ENV['RUBY_COMMIT_HASH'] || ENV['RUBY_VERSION'],
       'repo' => 'ruby',
       'organization' => 'ruby'
     }.merge(form_results))
