@@ -12,7 +12,7 @@ Dir.mktmpdir do |dir|
     GEMFILE
     system("bundle install --quiet")
 
-    Benchmark.do_benchmark('bundle exec binary') do
+    Benchmark.do_benchmark('bundle exec gem') do
       system("bundle exec noop-gem")
     end
   end
