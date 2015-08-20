@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_vm1_yield.rb

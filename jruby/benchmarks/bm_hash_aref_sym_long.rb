@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_hash_aref_sym_long.rb

@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_securerandom.rb

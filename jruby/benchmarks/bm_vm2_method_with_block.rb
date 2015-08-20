@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_vm2_method_with_block.rb

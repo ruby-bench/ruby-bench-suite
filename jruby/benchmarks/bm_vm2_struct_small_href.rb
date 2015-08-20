@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_vm2_struct_small_href.rb

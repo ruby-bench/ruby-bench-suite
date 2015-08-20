@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_vm3_gc.rb
