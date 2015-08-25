@@ -9,6 +9,7 @@ end
 if rails_master?
   gem 'rails', github: 'rails'
   gem 'arel', github: 'rails/arel', branch: 'master'
+  gem 'rack', github: 'rack/rack', branch: 'master'
 else
   gem 'rails', path: '/rails'
 end
