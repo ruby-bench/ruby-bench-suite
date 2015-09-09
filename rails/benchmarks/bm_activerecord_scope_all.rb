@@ -24,9 +24,6 @@ attributes = {
   User.create!(attributes)
 end
 
-Benchmark.rails("activerecord/#{db_adapter}_scope", time: 5) do
-  User
-    .where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
-    .where(email: "foobar@email.com")
-    .limit(10)
+Benchmark.rails("activerecord/#{db_adapter}_scope_all", time: 5) do
+  User.all.to_a
 end
