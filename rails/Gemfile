@@ -16,6 +16,7 @@ if rails_master?
   gem 'mail', github: 'mikel/mail', branch: 'master'
   gem 'globalid', github: 'rails/globalid', branch: 'master'
   gem 'sass-rails', github: 'rails/sass-rails', branch: 'master'
+  gem 'turbolinks', github: 'rails/turbolinks', branch: 'master'
 else
   gem 'rails', path: '/rails'
 end
