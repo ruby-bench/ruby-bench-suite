@@ -21,7 +21,12 @@ server.config.logger = ActionCable::Connection::TaggedLoggerProxy.new(inner_logg
 
 # and now the "real" setup for our test:
 server.config.disable_request_forgery_protection = true
-server.config.channel_load_paths = [File.expand_path(Dir.pwd, __dir__)] #'client', __dir__)]
+
+if Dir.pwd.include?('support')
+  server.config.channel_load_paths = [File.expand_path(Dir.pwd, __dir__)]
+else
+  server.config.channel_load_paths = [File.expand_path('support', __dir__)]
+end
 
 def with_puma_server(rack_app = ActionCable.server, port, config)
   ActionCable.server.config.cable = config
