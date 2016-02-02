@@ -3,7 +3,7 @@ require 'bundler/setup'
 require 'rails'
 require 'action_controller/railtie'
 
-class NullLoger < Logger
+class NullLogger < Logger
   def initialize(*args)
   end
 
@@ -62,7 +62,7 @@ class BenchmarkApp < Rails::Application
   config.middleware.delete "Rack::Lock"
 
   # to disable log files
-  config.logger = NullLoger.new
+  config.logger = NullLogger.new
   config.active_support.deprecation = :log
 end
 
