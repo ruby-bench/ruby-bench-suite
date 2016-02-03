@@ -16,10 +16,12 @@ class BenchmarkDriver
 
   def initialize(options)
     @repeat_count = options[:repeat_count]
+    @pattern = options[:pattern]
   end
 
   def run
     files.each do |path|
+      next if !@pattern.empty? && /#{@pattern.join('|')}/ !~ File.basename(path)
       run_single(path)
     end
   end
@@ -107,7 +109,8 @@ class BenchmarkDriver
 end
 
 options = {
-  repeat_count: 1
+  repeat_count: 1,
+  pattern: []
 }
 
 OptionParser.new do |opts|
@@ -115,6 +118,10 @@ OptionParser.new do |opts|
 
   opts.on("-r", "--repeat-count [NUM]", "Run benchmarks [NUM] times taking the best result") do |value|
     options[:repeat_count] = value.to_i
+  end
+
+  opts.on("-p", "--pattern <PATTERN1,PATTERN2,PATTERN3>", "Benchmark name pattern") do |value|
+    options[:pattern] = value.split(',')
   end
 end.parse!(ARGV)
 
