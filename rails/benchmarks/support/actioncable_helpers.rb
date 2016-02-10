@@ -1,9 +1,15 @@
-require 'actioncable'
+require 'action_cable'
 require 'rack/mock'
 require 'faye/websocket'
 require 'active_support/core_ext/hash/indifferent_access'
 require 'pathname'
-require 'json'
+require 'puma'
+
+module Rails
+  def self.root
+    Pathname.pwd
+  end
+end
 
 ::Object.const_set(:ApplicationCable, Module.new)
 

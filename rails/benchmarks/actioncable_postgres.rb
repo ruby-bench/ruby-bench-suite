@@ -13,11 +13,9 @@ PG_DB_URL = "postgres://postgres@#{pg_tcp_addr}:#{pg_port}/rubybench",
 Benchmark.rails("actioncable_postgres", time: 10) do
   pg_config =  { adapter: 'postgresql', url: PG_DB_URL }.with_indifferent_access
   with_puma_server(ActionCable.server, 4001, pg_config) do |port|
-    sleep
-  end
-
-  500.times do
-    PG_FAYE.send(SUB)
-    PG_FAYE.send(MSG)
+    500.times do
+      PG_FAYE.send(SUB)
+      PG_FAYE.send(MSG)
+    end
   end
 end
