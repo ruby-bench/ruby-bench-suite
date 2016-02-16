@@ -43,6 +43,7 @@ class BenchmarkDriver
 
     # FIXME: ` provides the full output but it'll return failed output as well.
     output = measure(script)
+    return unless output
 
     request = Net::HTTP::Post.new('/benchmark_runs')
     request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
@@ -94,17 +95,21 @@ class BenchmarkDriver
   end
 
   def measure(script)
-    results = []
+    begin
+      results = []
 
-    @repeat_count.times do
-      result = JSON.parse(`#{script}`)
-      puts "#{result["label"]} #{result["iterations_per_second"]}/ips"
-      results << result
+      @repeat_count.times do
+        result = JSON.parse(`#{script}`)
+        puts "#{result["label"]} #{result["iterations_per_second"]}/ips"
+        results << result
+      end
+
+      results.sort_by do |result|
+        result['iterations_per_second']
+      end.last
+    rescue JSON::ParserError
+      # Do nothing
     end
-
-    results.sort_by do |result|
-      result['iterations_per_second']
-    end.last
   end
 end
 
