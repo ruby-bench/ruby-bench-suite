@@ -103,7 +103,11 @@ class BenchmarkDriver
   end
 
   def endpoint
-    @endpoint ||= Net::HTTP.new(ENV["API_URL"] || 'rubybench.org')
+    @endpoint ||= begin
+      http = Net::HTTP.new(ENV["API_URL"] || 'rubybench.org', 443)
+      http.use_ssl = true
+      http
+    end
   end
 
   def generate_digest(path, database)
