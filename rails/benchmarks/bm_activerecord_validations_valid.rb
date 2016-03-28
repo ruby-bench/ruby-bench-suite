@@ -50,8 +50,8 @@ post = Post.new({
   size: 'small'
 })
 
-Benchmark.rails("activerecord/#{db_adapter}_validations_valid", time: 5) do
-  unless post.valid?
-    raise "should be valid"
+Benchmark::Rails.new("activerecord/#{db_adapter}_validations_valid", time: 5) do |x|
+  x.report('default settings') do
+    raise "should be valid" unless post.valid?
   end
 end

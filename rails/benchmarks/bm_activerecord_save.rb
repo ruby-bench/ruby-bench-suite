@@ -20,10 +20,24 @@ attributes = {
 
 class User < ActiveRecord::Base; end
 
-Benchmark.rails("activerecord/#{db_adapter}_save", time: 5) do
-  user = User.new(attributes)
+Benchmark::Rails.new("activerecord/#{db_adapter}_save", time: 5) do |x|
+  x.report('default settings') do
+    user = User.new(attributes)
 
-  unless user.save
-    raise "should save correctly"
+    unless user.save
+      raise "should save correctly"
+    end
+  end
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    ActiveRecord::Base.connection.unprepared_statement do
+      x.report('without prepared statements') do
+        user = User.new(attributes)
+
+        unless user.save
+          raise "should save correctly"
+        end
+      end
+    end
   end
 end

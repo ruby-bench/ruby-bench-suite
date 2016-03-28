@@ -26,6 +26,13 @@ end
 
 User.create!(name: 'kir', email: 'shatrov@me.com')
 
-Benchmark.rails("activerecord/#{db_adapter}_finders_find_by_attributes", time: 5) do
-  User.find_by_email('shatrov@me.com')
+Benchmark::Rails.new("activerecord/#{db_adapter}_finders_find_by_attributes", time: 5) do |x|
+  x.report('default settings') { User.find_by(email: 'shatrov@me.com') }
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    ActiveRecord::Base.connection.unprepared_statement do
+      x.report('without prepared statements') { User.find_by(email: 'shatrov@me.com') }
+    end
+  end
 end
+

@@ -90,4 +90,12 @@ class PostsController < ActionController::Base
   end
 end
 
-Benchmark.rails("request/#{db_adapter}_scaffold_show", time: 5) { App.request }
+Benchmark::Rails.new("request/#{db_adapter}_scaffold_show", time: 5) do |x|
+  x.report('default settings') { App.request }
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    ActiveRecord::Base.connection.unprepared_statement do
+      x.report('without prepared statements') { App.request }
+    end
+  end
+end
