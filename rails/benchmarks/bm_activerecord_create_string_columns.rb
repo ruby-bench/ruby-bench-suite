@@ -26,6 +26,12 @@ COUNT.times do |i|
   attributes[:"column#{i}"] = "Some string #{i}"
 end
 
-Benchmark.rails("activerecord/#{db_adapter}_create_string_columns", time: 5) do
-  User.create!(attributes)
+Benchmark::Rails.new("activerecord/#{db_adapter}_create_string_columns", time: 5) do |x|
+  x.report('default settings') { User.create!(attributes) }
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    ActiveRecord::Base.connection.unprepared_statement do
+      x.report('without prepared statements') { User.create!(attributes) }
+    end
+  end
 end

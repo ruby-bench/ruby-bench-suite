@@ -5,33 +5,51 @@ require 'json'
 require_relative 'helpers.rb'
 
 module Benchmark
-  module Rails
-    def rails(label=nil, time:, disable_gc: true, warmup: 3, &block)
+  class Rails
+    def initialize(label, time:, disable_gc: true, warmup: 3)
+      @label = label
+      @time = time
+      @disable_gc = disable_gc
+      @warmup = warmup
+      @entries = {}
+      yield(self)
+      print
+    end
+
+    def report(result_label, &block)
       unless block_given?
         raise ArgumentError.new, "block should be passed"
       end
 
-      if disable_gc
+      if @disable_gc
         GC.disable
       else
         GC.enable
       end
 
-      report = Benchmark.ips(time, warmup, true) do |x|
-        x.report(label) { yield }
+      report = Benchmark.ips(@time, @warmup, true) do |x|
+        x.report { yield }
       end
 
-      entry = report.entries.first
+      @entries[result_label] = [report.entries.first, get_total_allocated_objects(&block)]
+    end
 
+    def print
       output = {
-        label: label,
+        label: @label,
         version: ::Rails.version.to_s,
-        iterations_per_second: entry.ips,
-        iterations_per_second_standard_deviation: entry.stddev_percentage,
-        total_allocated_objects_per_iteration: get_total_allocated_objects(&block)
-      }.to_json
+        results: {}
+      }
 
-      puts output
+      @entries.each do |result_label, entry|
+        output[:results][result_label] = {
+          iterations_per_second: entry[0].ips,
+          iterations_per_second_standard_deviation: entry[0].stddev_percentage,
+          total_allocated_objects_per_iteration: entry[1]
+        }
+      end
+
+      puts output.to_json
     end
 
     def get_total_allocated_objects
@@ -50,6 +68,4 @@ module Benchmark
       end
     end
   end
-
-  extend Benchmark::Rails
 end

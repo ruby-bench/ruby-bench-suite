@@ -24,7 +24,18 @@ class User < ActiveRecord::Base; end
   })
 end
 
-Benchmark.rails("activerecord/#{db_adapter}_scope_where", time: 5) do
-  User.where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
-      .where("email LIKE :email", email: "foobar00%@email.com").to_a
+Benchmark::Rails.new("activerecord/#{db_adapter}_scope_where", time: 5) do |x|
+  x.report('default settings') do
+    User.where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+        .where("email LIKE :email", email: "foobar00%@email.com").to_a
+  end
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    ActiveRecord::Base.connection.unprepared_statement do
+      x.report('without prepared statements') do
+        User.where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+            .where("email LIKE :email", email: "foobar00%@email.com").to_a
+      end
+    end
+  end
 end

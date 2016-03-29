@@ -20,8 +20,20 @@ attributes = {
   email: "foobar@email.com"
 }
 
-Benchmark.rails("activerecord/#{db_adapter}_destroy", time: 5) do
-  # we need to create the record in order to delete it
-  user = User.create!(attributes)
-  user.destroy
+Benchmark::Rails.new("activerecord/#{db_adapter}_destroy", time: 5) do |x|
+  x.report('default settings') do
+    # we need to create the record in order to delete it
+    user = User.create!(attributes)
+    user.destroy
+  end
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    ActiveRecord::Base.connection.unprepared_statement do
+      x.report('without prepared statements') do
+        # we need to create the record in order to delete it
+        user = User.create!(attributes)
+        user.destroy
+      end
+    end
+  end
 end

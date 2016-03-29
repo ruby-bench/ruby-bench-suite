@@ -32,6 +32,12 @@ admin = true
   admin = !admin
 end
 
-Benchmark.rails("activerecord/#{db_adapter}_scope_all_with_default_scope", time: 5) do
-  User.all.to_a
+Benchmark::Rails.new("activerecord/#{db_adapter}_scope_all_with_default_scope", time: 5) do |x|
+  x.report('default settings') { User.all.to_a }
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    ActiveRecord::Base.connection.unprepared_statement do
+      x.report('without prepared statements') { User.all.to_a }
+    end
+  end
 end

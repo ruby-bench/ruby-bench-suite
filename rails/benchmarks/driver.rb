@@ -17,7 +17,7 @@ mysql_tcp_addr = ENV['MYSQL_PORT_3306_TCP_ADDR'] || 'localhost'
 mysql_port = ENV['MYSQL_PORT_3306_TCP_PORT'] || 3306
 
 DATABASE_URLS = {
-  psql: "postgres://postgres@#{postgres_tcp_addr}:#{postgres_port}/rubybench",
+  psql: "postgres://postgres:1111111111@#{postgres_tcp_addr}:#{postgres_port}/rubybench",
   mysql: "mysql2://root@#{mysql_tcp_addr}:#{mysql_port}/rubybench",
 }
 
@@ -72,7 +72,7 @@ class BenchmarkDriver
     end
 
     submit = {
-      'benchmark_type[category]' => output["label"],
+      'benchmark_type[category]' => output.delete("label"),
       'benchmark_type[script_url]' => "#{RAW_URL}#{Pathname.new(path).basename}",
       'benchmark_type[digest]' => generate_digest(path, database),
       'benchmark_run[environment]' => "#{`ruby -v`}",
@@ -80,25 +80,32 @@ class BenchmarkDriver
       'organization' => 'rails'
     }.merge(initiator_hash)
 
-    request.set_form_data(submit.merge(
-      {
-        "benchmark_run[result][iterations_per_second]" => output["iterations_per_second"].round(3),
+    form_results = {}
+
+    output.each do |result_label, output|
+      form_results["benchmark_run[result][#{result_label}]"] = output["iterations_per_second"].round(3)
+    end
+
+    request.set_form_data(submit.merge(form_results.merge({
         'benchmark_result_type[name]' => 'Number of iterations per second',
         'benchmark_result_type[unit]' => 'Iterations per second'
-      }
-    ))
+    })))
 
     endpoint.request(request)
 
-    request.set_form_data(submit.merge(
-      {
-        "benchmark_run[result][total_allocated_objects_per_iteration]" => output["total_allocated_objects_per_iteration"],
-        'benchmark_result_type[name]' => 'Allocated objects',
-        'benchmark_result_type[unit]' => 'Objects'
-      }
-    ))
+    form_results = {}
+
+    output.each do |result_label, output|
+      form_results["benchmark_run[result][#{result_label}]"] = output["total_allocated_objects_per_iteration"].round(3)
+    end
+
+    request.set_form_data(submit.merge(form_results.merge({
+      'benchmark_result_type[name]' => 'Allocated objects',
+      'benchmark_result_type[unit]' => 'Objects'
+    })))
 
     endpoint.request(request)
+
     puts "Posting results to Web UI...."
   end
 
@@ -125,17 +132,28 @@ class BenchmarkDriver
 
   def measure(script)
     begin
-      results = []
+      results = {}
+      label = nil
 
       @repeat_count.times do
         result = JSON.parse(`#{script}`)
-        puts "#{result["label"]} #{result["iterations_per_second"]}/ips"
-        results << result
+
+        label ||= result['label']
+        puts result["label"]
+        result["results"].each do |result_label, output|
+          puts "#{result_label} #{output["iterations_per_second"]}/ips"
+          results[result_label] ||= []
+          results[result_label] << output
+        end
       end
 
-      results.sort_by do |result|
-        result['iterations_per_second']
-      end.last
+      results = results.each do |result_label, outputs|
+        results[result_label] = outputs.sort_by do |output|
+          output['iterations_per_second']
+        end.last
+      end.merge({ "label" => label })
+
+      results
     rescue JSON::ParserError
       # Do nothing
     end

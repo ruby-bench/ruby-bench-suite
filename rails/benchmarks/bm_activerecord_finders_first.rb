@@ -24,6 +24,12 @@ attributes = {
   User.create!(attributes)
 end
 
-Benchmark.rails("activerecord/#{db_adapter}_finders_first", time: 5) do
-  User.first
+Benchmark::Rails.new("activerecord/#{db_adapter}_finders_first", time: 1) do |x|
+  x.report('default settings') { User.first }
+
+  if defined?(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter)
+    ActiveRecord::Base.connection.unprepared_statement do
+      x.report('without prepared statements') { User.first }
+    end
+  end
 end
