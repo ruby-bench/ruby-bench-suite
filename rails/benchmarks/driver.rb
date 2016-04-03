@@ -117,7 +117,7 @@ class BenchmarkDriver
     else
       output = measure(script)
       return unless output
-      form_data = default_form_data(output, path)
+      form_data = default_form_data(output, path, database)
 
       submit_request(form_data, {
         "benchmark_run[result][iterations_per_second]" => output["iterations_per_second"].round(3),
