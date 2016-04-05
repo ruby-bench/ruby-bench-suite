@@ -4,6 +4,10 @@ module ::Kernel
   def rails_master?
     ENV["RAILS_MASTER"] == '1'
   end
+
+  def mysql2_prepared_statements?
+    ENV["MYSQL2_PREPARED_STATEMENTS"] == '1'
+  end
 end
 
 if rails_master?
@@ -22,7 +26,15 @@ else
 end
 
 gem 'sqlite3', '1.3.10'
-gem 'mysql2', '0.4.2'
+
+if mysql2_prepared_statements?
+  # Does not work with < Rails 4.2.5.
+  # See http://github.com/rails/rails/issues/21544.
+  gem 'mysql2', '0.4.2'
+else
+  gem 'mysql2', '0.3.18'
+end
+
 gem 'pg', '0.18.1'
 gem 'benchmark-ips', '~> 2.2.0'
 gem 'em-hiredis', '~> 0.3.0'
