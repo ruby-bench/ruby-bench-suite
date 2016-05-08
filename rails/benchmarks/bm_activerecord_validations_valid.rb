@@ -2,7 +2,7 @@ require 'bundler/setup'
 require 'active_record'
 require_relative 'support/benchmark_rails'
 
-ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+ActiveRecord::Base.establish_connection(ENV.fetch('DATABASE_URL'))
 ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do

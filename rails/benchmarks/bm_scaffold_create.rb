@@ -56,7 +56,7 @@ end
 
 ScaffoldApp.initialize!
 
-ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'])
+ActiveRecord::Base.establish_connection(ENV.fetch('DATABASE_URL'))
 ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do
