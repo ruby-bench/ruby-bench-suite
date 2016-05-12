@@ -3,42 +3,7 @@ require 'rails'
 require 'action_controller/railtie'
 require 'active_record'
 require_relative 'support/benchmark_rails'
-
-class App
-  ENV = {
-    "GATEWAY_INTERFACE" => "CGI/1.1",
-    "PATH_INFO" => '/posts/1',
-    "QUERY_STRING" => "",
-    "REMOTE_ADDR" => "127.0.0.1",
-    "REMOTE_HOST" => "127.0.0.1",
-    "REQUEST_METHOD" => 'PUT',
-    "REQUEST_URI" => "http://localhost:3000/posts/1",
-    "SCRIPT_NAME" => "",
-    "SERVER_NAME" => "localhost",
-    "SERVER_PORT" => "3000",
-    "SERVER_PROTOCOL" => "HTTP/1.1",
-    "SERVER_SOFTWARE" => "WEBrick/1.3.1 (Ruby/2.2.2/2014-05-08)",
-    "HTTP_HOST" => "localhost:3000",
-    "HTTP_ACCEPT" =>  "*/*",
-    "HTTP_USER_AGENT" => "HTTPie/0.8.0",
-    "rack.version" => [1, 2],
-    "rack.multithread" => false,
-    "rack.multiprocess" => false,
-    "rack.run_once" => false,
-    "rack.url_scheme" => "http",
-    "rack.errors" => StringIO.new,
-    "rack.input" => StringIO.new("post%5Bauthor%5D=C&post%5Bbody%5D=B&post%5Btitle%5D=A"),
-    "CONTENT_LENGTH" => '53',
-    "CONTENT_TYPE" => 'application/x-www-form-urlencoded',
-    "HTTP_VERSION" => "HTTP/1.1",
-    "REQUEST_PATH" => "/posts/1"
-  }
-
-  def self.request
-    _, _, body = ScaffoldApp.call(ENV)
-    body.close if body.respond_to?(:close)
-  end
-end
+require_relative 'support/request_helper'
 
 class ScaffoldApp < Rails::Application
   config.secret_token = "s"*30
@@ -117,4 +82,10 @@ Post.create!(
   author: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
 )
 
-Benchmark.rails("request/#{db_adapter}_scaffold_update", time: 5) { App.request }
+request = Rack::MockRequest.env_for(
+  "http://localhost:3000/posts/1",
+  method: 'PUT',
+  input: "post%5Bauthor%5D=C&post%5Bbody%5D=B&post%5Btitle%5D=A",
+).merge("CONTENT_TYPE" => "application/x-www-form-urlencoded")
+
+Benchmark.rails("request/#{db_adapter}_scaffold_update", time: 5) { RequestHelper.perform(ScaffoldApp, request) }
