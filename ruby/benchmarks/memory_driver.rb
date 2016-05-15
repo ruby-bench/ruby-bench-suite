@@ -135,7 +135,8 @@ class BenchmarkDriver
     @results.each{|v, result|
       rets = adjusted_results(v, result)
 
-      http = Net::HTTP.new(ENV["API_URL"] || 'rubybench.org')
+      http = Net::HTTP.new(ENV["API_URL"] || 'rubybench.org', 443)
+      http.use_ssl = true
       request = Net::HTTP::Post.new('/benchmark_runs')
       request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
 
