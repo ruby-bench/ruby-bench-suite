@@ -33,7 +33,7 @@ class BenchmarkDriver
   end
 
   def bundler_lib
-    lib = [ENV['BUNLDER_LIB'], Pathname(`gem which bundler`.strip).dirname]
+    lib = [ENV['BUNDLER_LIB'], Pathname(`gem which bundler`.strip).dirname]
       .find { |p| p && File.directory?(p) }
     Pathname(lib)
   end
