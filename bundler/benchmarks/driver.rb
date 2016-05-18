@@ -17,6 +17,7 @@ class BenchmarkDriver
   def initialize(options)
     @repeat_count = options[:repeat_count]
     @pattern = options[:pattern]
+    @local = options[:local]
   end
 
   def run
@@ -72,7 +73,7 @@ class BenchmarkDriver
       }
     ))
 
-    endpoint.request(request)
+    endpoint.request(request) unless @local
 
     request.set_form_data(submit.merge(
       {
@@ -82,8 +83,12 @@ class BenchmarkDriver
       }
     ))
 
-    endpoint.request(request)
-    puts "Posting results to Web UI...."
+    if @local
+      puts output
+    else
+      endpoint.request(request)
+      puts "Posting results to Web UI...."
+    end
   end
 
   def generate_digest(path)
@@ -119,7 +124,8 @@ end
 
 options = {
   repeat_count: 1,
-  pattern: []
+  pattern: [],
+  local: false,
 }
 
 OptionParser.new do |opts|
@@ -131,6 +137,10 @@ OptionParser.new do |opts|
 
   opts.on("-p", "--pattern <PATTERN1,PATTERN2,PATTERN3>", "Benchmark name pattern") do |value|
     options[:pattern] = value.split(',')
+  end
+
+  opts.on("--local", "Don't report benchmark results to the server") do |value|
+    options[:local] = value
   end
 end.parse!(ARGV)
 
