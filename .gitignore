@@ -1,3 +1,6 @@
 rails/vendor/
 rails/log/
 Gemfile.lock
+sequel/vendor/
+sequel/log/
+
