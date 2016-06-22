@@ -1,0 +1,28 @@
+source 'https://rubygems.org'
+
+module ::Kernel
+  def sequel_master?
+    ENV["SEQUEL_MASTER"] == '1'
+  end
+
+  def mysql2_prepared_statements?
+    ENV["MYSQL2_PREPARED_STATEMENTS"] == '1'
+  end
+end
+
+if sequel_master?
+  gem 'sequel', github: 'jeremyevans/sequel', branch: 'master'
+else
+  gem 'sequel', path: '/sequel'
+end
+
+gem 'activemodel', '~> 4.2.6'
+
+if mysql2_prepared_statements?
+  gem 'mysql2', '0.4.2'
+else
+  gem 'mysql2', '0.3.18'
+end
+
+gem 'pg', '0.18.1'
+gem 'benchmark-ips', '~> 2.2.0'
