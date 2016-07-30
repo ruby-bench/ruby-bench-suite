@@ -1,7 +1,6 @@
 require_relative 'support/benchmark_bundler.rb'
 require 'bundler/cli'
 
-
 Dir.mktmpdir do |dir|
   Dir.chdir(dir) do
     File.write('Gemfile', <<-GEMFILE)
@@ -18,4 +17,3 @@ Dir.mktmpdir do |dir|
     end
   end
 end
-

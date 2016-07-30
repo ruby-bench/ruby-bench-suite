@@ -19,4 +19,3 @@ Dir.mktmpdir do |dir|
     end
   end
 end
-
