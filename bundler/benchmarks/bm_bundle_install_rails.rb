@@ -11,7 +11,7 @@ Dir.mktmpdir do |dir|
       gem 'nokogiri', '1.6.7.2'
     GEMFILE
 
-    system("bundle package")
+    system("bundle package --quiet")
     system("bundle install --quiet")
 
     Benchmark.do_benchmark('bundle install rails', time: 60) do

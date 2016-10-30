@@ -10,10 +10,10 @@ Dir.mktmpdir do |dir|
     GEMFILE
 
     system("bundle install --quiet")
-    system("bundle outdated")
+    system("bundle outdated --quiet")
 
     Benchmark.do_benchmark('bundle outdated rails') do
-      system("bundle outdated")
+      system("bundle outdated --quiet")
     end
   end
 end
