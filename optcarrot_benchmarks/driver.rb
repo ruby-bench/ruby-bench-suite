@@ -8,7 +8,7 @@ results = []
 checksums = []
 
 3.times do |i|
-  output = `ruby ./optcarrot/bin/optcarrot --benchmark ./optcarrot/examples/#{ROM}`
+  output = `ruby #{File.dirname(__FILE__)}/optcarrot/bin/optcarrot --benchmark #{File.dirname(__FILE__)}/optcarrot/examples/#{ROM}`
   fps, checksum = output.split("\n")
   fps = fps[/fps: (.+)/, 1].to_i
   results << fps
