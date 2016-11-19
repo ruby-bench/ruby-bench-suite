@@ -47,9 +47,7 @@ request.set_form_data({
   'organization' => 'ruby'
 })
 
-response = http.request(request)
-puts response.status
-puts response.body
+puts http.request(request).body
 puts "Posting results to Web UI...."
 puts "Average FPS: #{avg_fps}"
 puts "Checksum: #{checksum}"
