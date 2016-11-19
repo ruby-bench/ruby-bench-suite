@@ -45,7 +45,7 @@ request.set_form_data({
   'benchmark_run[environment]' => { "Ruby version" => `ruby -v`, "Checksum" => checksum },
   'repo' => 'ruby',
   'organization' => 'ruby'
-})
+}.merge(initiator_hash))
 
 puts http.request(request).body
 puts "Posting results to Web UI...."
