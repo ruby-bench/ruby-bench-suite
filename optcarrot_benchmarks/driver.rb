@@ -42,7 +42,7 @@ request.set_form_data({
   'benchmark_type[script_url]' => "https://raw.githubusercontent.com/mame/optcarrot/master/lib/optcarrot/nes.rb",
   'benchmark_type[digest]' => Digest::SHA2.hexdigest(Optcarrot::VERSION),
   "benchmark_run[result][default]" => avg_fps,
-  'benchmark_run[environment]' => { "Ruby version" => `ruby -v`, "Checksum" => checksum },
+  'benchmark_run[environment]' => { "Ruby version" => `ruby -v`, "Checksum" => checksum }.to_yaml,
   'repo' => 'ruby',
   'organization' => 'ruby'
 }.merge(initiator_hash))
