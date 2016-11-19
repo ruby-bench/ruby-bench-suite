@@ -1,5 +1,6 @@
 require 'net/http'
 require 'digest'
+require 'yaml'
 require_relative 'optcarrot/lib/optcarrot'
 
 ROM = 'Lan_Master.nes'
