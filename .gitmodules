@@ -1,3 +1,6 @@
 [submodule "optcarrot_benchmarks/optcarrot"]
 	path = optcarrot_benchmarks/optcarrot
 	url = https://github.com/mame/optcarrot.git
+[submodule "liquid_benchmarks/liquid"]
+	path = liquid_benchmarks/liquid
+	url = https://github.com/Shopify/liquid.git
