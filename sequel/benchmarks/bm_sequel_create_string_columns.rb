@@ -6,7 +6,7 @@ DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
 
 COUNT=25
 
-DB.create_table(:users) do
+DB.create_table!(:users) do
   primary_key :id
   COUNT.times do |i|
     String :"column#{i}", size: 255
