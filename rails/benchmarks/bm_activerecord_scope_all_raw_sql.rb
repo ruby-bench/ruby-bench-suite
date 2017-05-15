@@ -25,7 +25,8 @@ attributes = {
 end
 
 Benchmark.rails("activerecord/#{db_adapter}_scope_all_raw_sql", time: 5) do
-  ActiveRecord::Base.connection.execute("SELECT * FROM users;")
-  .map{ |user| "name: #{user["name"]} email: #{user["email"]}" }
-  .join("\n")
+  str = ""
+  ActiveRecord::Base.connection.execute("SELECT * FROM users;").each do |user|
+    str << "name: #{user["name"]} email: #{user["email"]}\n"
+  end
 end

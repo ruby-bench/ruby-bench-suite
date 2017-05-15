@@ -27,7 +27,8 @@ attributes = {
 end
 
 Benchmark.sequel("sequel/#{db_adapter}_scope_all_raw_sql", time: 5) do
-  DB.fetch("SELECT * FROM users")
-  .map{ |user| "name: #{user["name"]} email: #{user["email"]}" }
-  .join("\n")
+  str = ""
+  DB.fetch("SELECT * FROM users").each do |user|
+    str << "name: #{user["name"]} email: #{user["email"]}\n"
+  end
 end
