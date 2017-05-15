@@ -25,5 +25,5 @@ attributes = {
 end
 
 Benchmark.sequel("sequel/#{db_adapter}_scope_all", time: 5) do
-  User.all
+  User.all.map{ |user| "name: #{user.name} email: #{user.email}" }.join("\n")
 end
