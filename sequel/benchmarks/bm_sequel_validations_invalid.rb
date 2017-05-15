@@ -4,7 +4,7 @@ require_relative 'support/benchmark_sequel'
 
 DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
 
-DB.create_table(:posts) do
+DB.create_table!(:posts) do
   primary_key :id
   String :title, size: 255
   String :author, size: 255
