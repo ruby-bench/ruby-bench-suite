@@ -13,8 +13,6 @@ DB.create_table!(:users) do
 end
 
 class User < Sequel::Model
-  self.raise_on_save_failure = true
-  self.set_allowed_columns :name, :email, :created_at, :updated_at
 end
 
 attributes = {
@@ -27,5 +25,5 @@ attributes = {
 end
 
 Benchmark.sequel("sequel/#{db_adapter}_scope_all", time: 5) do
-  User.all.to_a
+  User.all
 end
