@@ -1,5 +1,7 @@
 # Ruby Bench Benchmark Suite
 
+![ruby bench suite](suite-logo.png)
+
 This repository contains the benchmarks that are being run on [RubyBench.org](http://rubybench.org/).
 
 For overall project description visit [ruby-bench/ruby-bench](https://github.com/ruby-bench/ruby-bench) repo.
