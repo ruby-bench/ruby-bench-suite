@@ -13,6 +13,8 @@ DB.create_table!(:users) do
 end
 
 class User < Sequel::Model
+  self.raise_on_save_failure = true
+  self.set_allowed_columns :name, :email, :created_at, :updated_at
 end
 
 attributes = {
@@ -24,9 +26,9 @@ attributes = {
   User.create(attributes)
 end
 
-Benchmark.sequel("sequel/#{db_adapter}_scope_all", time: 5) do
+Benchmark.sequel("sequel/#{db_adapter}_scope_all_raw_sql", time: 5) do
   str = ""
-  User.all.each do |user|
-    str << "name: #{user.name} email: #{user.email}\n"
+  DB.fetch("SELECT * FROM users").each do |user|
+    str << "name: #{user["name"]} email: #{user["email"]}\n"
   end
 end
