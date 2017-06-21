@@ -27,6 +27,9 @@ end
 end
 
 Benchmark.sequel("sequel/#{db_adapter}_scope_where", time: 5) do
-  User.where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
-      .where(Sequel.ilike(:email, 'foobar00%@email.com')).to_a
+  str = ""
+  User
+    .where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+    .where(Sequel.lit('email LIKE ?', 'foobar00%@email.com'))
+    .each { |user| str << "name: #{user.name} email: #{user.email}\n" }
 end
