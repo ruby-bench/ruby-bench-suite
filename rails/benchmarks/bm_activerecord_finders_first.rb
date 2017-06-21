@@ -25,5 +25,6 @@ attributes = {
 end
 
 Benchmark.rails("activerecord/#{db_adapter}_finders_first", time: 5) do
-  User.first
+  user = User.first
+  str = "name: #{user.name} email: #{user.email}"
 end
