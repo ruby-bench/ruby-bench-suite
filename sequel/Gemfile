@@ -16,6 +16,7 @@ else
   gem 'sequel', path: '/sequel'
 end
 
+gem 'sequel_pg', require: 'sequel'
 gem 'activemodel', '~> 4.2.6'
 
 if mysql2_prepared_statements?
