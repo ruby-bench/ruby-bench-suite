@@ -25,6 +25,9 @@ class User < ActiveRecord::Base; end
 end
 
 Benchmark.rails("activerecord/#{db_adapter}_scope_where", time: 5) do
-  User.where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
-      .where("email LIKE :email", email: "foobar00%@email.com").to_a
+  str = ""
+  User
+    .where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
+    .where("email LIKE :email", email: "foobar00%@email.com").to_a
+    .each { |user| str << "name: #{user.name} email: #{user.email}\n" }
 end

@@ -29,5 +29,6 @@ end
 User.create(name: 'kir', email: 'shatrov@me.com')
 
 Benchmark.sequel("sequel/#{db_adapter}_finders_first", time: 5) do
-  User.first
+  user = User.first
+  str = "name: #{user.name} email: #{user.email}"
 end

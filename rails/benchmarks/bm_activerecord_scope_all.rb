@@ -25,5 +25,8 @@ attributes = {
 end
 
 Benchmark.rails("activerecord/#{db_adapter}_scope_all", time: 5) do
-  User.all.to_a
+  str = ""
+  User.all.each do |user|
+    str << "name: #{user.name} email: #{user.email}\n"
+  end
 end
