@@ -7,7 +7,38 @@ ActiveRecord::Base.establish_connection(ENV.fetch('DATABASE_URL'))
 ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do
- # TODO: define required tables
+  create_table :topics, force: true do |t|
+    t.timestamps null: false
+    t.datetime "bumped_at"
+    t.string "archetype"
+    t.datetime "deleted_at"
+    t.boolean "pinned_globally"
+    t.datetime "pinned_at"
+  end
+
+  create_table :topic_users, force: true do |t|
+    t.timestamps null: false
+    t.integer "user_id", null: false
+    t.integer "topic_id", null: false
+    t.integer "notification_level"
+    t.datetime "cleared_pinned_at"
+  end
+
+  create_table :categories, force: true do |t|
+    t.timestamps null: false
+    t.integer "topic_id", null: false
+  end
+
+  create_table :category_users, force: true do |t|
+    t.timestamps null: false
+    t.integer "user_id", null: false
+    t.integer "category_id", null: false
+    t.integer "notification_level"
+  end
+
+  create_table :users, force: true do |t|
+    t.timestamps null: false
+  end
 end
 
 # TODO: create models and records
