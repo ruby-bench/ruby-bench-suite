@@ -33,6 +33,7 @@ else
   gem 'mysql2', '0.3.18'
 end
 
+gem 'tzinfo-data'
 gem 'pg', '0.18.1'
 gem 'benchmark-ips', '~> 2.2.0'
 gem 'em-hiredis', '~> 0.3.0'
