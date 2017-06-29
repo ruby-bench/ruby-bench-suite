@@ -28,7 +28,7 @@ end
 if mysql2_prepared_statements?
   # Does not work with < Rails 4.2.5.
   # See http://github.com/rails/rails/issues/21544.
-  gem 'mysql2', '0.4.2'
+  gem 'mysql2', '0.4.6'
 else
   gem 'mysql2', '0.3.18'
 end
