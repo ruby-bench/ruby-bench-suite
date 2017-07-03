@@ -1,8 +1,5 @@
-require 'benchmark/ips'
-require 'json'
-
 require_relative '../../../support/benchmark_runner'
-require_relative 'helpers.rb'
+require_relative '../../../support/helpers.rb'
 
 module Benchmark
   module Sequel
