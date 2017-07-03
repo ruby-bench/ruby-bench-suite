@@ -3,5 +3,7 @@ def db_adapter
 end
 
 def db_setup(script:)
-  `cd ../support/setup && DATABASE_URL=#{ENV.fetch("DATABASE_URL")} ruby #{script}`
+  Dir.chdir("../support/setup") do
+    p `DATABASE_URL=#{ENV.fetch("DATABASE_URL")} BUNDLE_GEMFILE=Gemfile ruby #{script}`
+  end
 end

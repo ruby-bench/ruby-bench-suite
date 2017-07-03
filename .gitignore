@@ -3,4 +3,5 @@ rails/log/
 Gemfile.lock
 sequel/vendor/
 sequel/log/
+support/setup/vendor
 
