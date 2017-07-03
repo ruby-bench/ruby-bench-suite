@@ -42,7 +42,11 @@ class Post < ActiveRecord::Base; end
 ActionController::Base.prepend_view_path File.expand_path("../views", __FILE__)
 
 class PostsController < ActionController::Base
-  before_filter :set_post, only: [:update]
+  if Rails.version > '2.3.8'
+    before_action :set_post, only: [:update]
+  else
+    before_filter :set_post, only: [:update]
+  end
 
   # GET /posts/1/edit
   def edit
