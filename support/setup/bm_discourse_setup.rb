@@ -117,12 +117,12 @@ end
 # Stage DB
 
 10.times do |i|
-  User.create(username: "user#{i}")
+  User.create!(username: "user#{i}")
 end
 
 User.all.each do |user|
   500.times do |i|
-    user.topics.create(
+    user.topics.create!(
       title: "#{user.username} topic #{i}",
       pinned_globally: pinned_globally(i),
       bumped_at: bumped_at(i, user.id),
@@ -134,15 +134,16 @@ User.all.each do |user|
 end
 
 200.times do |i|
-  Category.create(topic: Topic.limit(1).offset(i).first)
+  Category.create!(topic: Topic.limit(1).offset(i).first)
 end
 
 Topic.last(100).each_with_index do |topic, i|
   topic.category = Category.offset(i).limit(1).first
+  topic.save!
 end
 
 User.all.each do |user|
   Topic.where.not(user: user).each_with_index do |topic, i|
-    TopicUser.create(user: user, topic: topic, cleared_pinned_at: cleared_pinned_at(topic), notification_level: notification_level(i))
+    TopicUser.create!(user: user, topic: topic, cleared_pinned_at: cleared_pinned_at(topic), notification_level: notification_level(i))
   end
 end

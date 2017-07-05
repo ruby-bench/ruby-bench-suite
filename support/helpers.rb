@@ -4,6 +4,6 @@ end
 
 def db_setup(script:)
   Dir.chdir("../support/setup") do
-    p `DATABASE_URL=#{ENV.fetch("DATABASE_URL")} BUNDLE_GEMFILE=Gemfile ruby #{script}`
+    `DATABASE_URL=#{ENV.fetch("DATABASE_URL")} BUNDLE_GEMFILE=Gemfile ruby #{script}`
   end
 end
