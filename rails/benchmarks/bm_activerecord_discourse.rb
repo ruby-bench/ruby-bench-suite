@@ -62,6 +62,6 @@ Benchmark.rails("active_record/#{db_adapter}_discourse", time: 5) do
     .order("topics.bumped_at DESC")
     .limit(30)
     .each do |topic|
-      str << "id: #{topic.id} title: #{topic.title} created_at: #{topic.created_at} user: #{topic.user.username}\n"
+      str << "id: #{topic.id} title: #{topic.title} created_at: #{topic.created_at.iso8601} user: #{topic.user.username}\n"
     end
 end
