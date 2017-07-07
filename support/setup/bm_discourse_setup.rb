@@ -16,6 +16,13 @@ ActiveRecord::Schema.define do
     t.datetime "pinned_at"
     t.integer "user_id", null: false
     t.integer "category_id"
+
+    t.index ["deleted_at", "archetype", "category_id", "id"], name: "idx_topics_front_page", using: :btree
+    t.index ["user_id"], name: "idx_topics_user_id_deleted_at", using: :btree
+    t.index ["bumped_at"], name: "index_topics_on_bumped_at", using: :btree
+    t.index ["id", "deleted_at"], name: "index_topics_on_id_and_deleted_at", using: :btree
+    t.index ["pinned_at"], name: "index_topics_on_pinned_at", using: :btree
+    t.index ["pinned_globally"], name: "index_topics_on_pinned_globally", using: :btree
   end
 
   create_table :topic_users, force: true do |t|
@@ -24,6 +31,9 @@ ActiveRecord::Schema.define do
     t.integer "topic_id", null: false
     t.integer "notification_level"
     t.datetime "cleared_pinned_at"
+
+    t.index ["topic_id", "user_id"], name: "idx_topic_users_on_topic_id_and_user_id", unique: true, using: :btree
+    t.index ["user_id", "topic_id"], name: "idx_topic_users_on_user_id_and_topic_id", unique: true, using: :btree
   end
 
   create_table :categories, force: true do |t|
@@ -36,11 +46,16 @@ ActiveRecord::Schema.define do
     t.integer "user_id", null: false
     t.integer "category_id", null: false
     t.integer "notification_level"
+
+    t.index ["user_id", "category_id", "notification_level"], name: "idx_category_users_on_user_cat_and_not", unique: true, using: :btree
+    t.index ["category_id", "user_id", "notification_level"], name: "idx_category_users_on_cat_user_and_not", unique: true, using: :btree
   end
 
   create_table :users, force: true do |t|
     t.timestamps null: false
     t.string "username"
+
+    t.index ["username"], name: "index_users_on_username", unique: true, using: :btree
   end
 end
 
