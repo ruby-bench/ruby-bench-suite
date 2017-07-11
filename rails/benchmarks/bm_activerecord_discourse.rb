@@ -43,7 +43,7 @@ Benchmark.rails("active_record/#{db_adapter}_discourse", time: 5) do
   Topic
     .unscoped
     .includes(:user, :category)
-    .references(:user, :category)
+    .references(:category)
     .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id})")
     .listable_topics
     .where('COALESCE(categories.topic_id, 0) <> topics.id')

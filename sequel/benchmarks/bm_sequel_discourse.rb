@@ -49,7 +49,7 @@ Benchmark.sequel("sequel/#{db_adapter}_discourse", time: 5) do
   Topic
     .unfiltered
     .eager_graph(Sequel.as(:category, :categories))
-    .eager_graph(Sequel.as(:user, :users))
+    .eager(:user)
     .left_outer_join(Sequel.lit("topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id})"))
     .listable_topics
     .where(Sequel.lit("COALESCE(categories.topic_id, 0) <> topics.id"))
