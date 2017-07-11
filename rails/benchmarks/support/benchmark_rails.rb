@@ -1,6 +1,7 @@
 require 'rails'
+
 require_relative '../../../support/benchmark_runner'
-require_relative 'helpers'
+require_relative '../../../support/helpers'
 
 module Benchmark
   module Rails
