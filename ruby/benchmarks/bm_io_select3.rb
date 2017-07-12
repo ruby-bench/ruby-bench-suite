@@ -2,14 +2,10 @@
 
 ios = []
 nr = 100
-if defined?(Process::RLIMIT_NOFILE)
-  max = Process.getrlimit(Process::RLIMIT_NOFILE)[0]
-else
-  max = 64
-end
+max = 4096
 puts "max fd: #{max} (results not apparent with <= 1024 max fd)"
 
-(max - 10).times do
+(max / 2).times do
   r, w = IO.pipe
   r.close
   ios.push w
