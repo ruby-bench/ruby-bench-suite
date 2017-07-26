@@ -1,0 +1,15 @@
+source "https://rubygems.org"
+
+module ::Kernel
+  def pg_master?
+    ENV["PG_MASTER"] == '1'
+  end
+end
+
+if pg_master?
+  gem 'pg', github: 'ged/ruby-pg'
+else
+  gem 'pg', path: '/pg'
+end
+
+gem 'benchmark-ips', '~> 2.2.0'
