@@ -18,7 +18,7 @@ class PGSuiteRunner
     new(options).run
   end
 
-  def initialize
+  def initialize(options)
     @pattern = options[:pattern]
   end
 
