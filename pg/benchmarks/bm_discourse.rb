@@ -7,13 +7,7 @@ require_relative 'support/benchmark_pg'
 
 db_setup script: "bm_discourse_setup.rb"
 
-conn = PG.connect(
-  host: ENV.fetch("HOST", "localhost"),
-  port: ENV.fetch("PORT", "5432"),
-  dbname: ENV.fetch("DB_NAME", "rubybench"),
-  user: ENV.fetch("DB_USER", "postgres"),
-  password: ENV.fetch("DB_PASSWORD", "postgres")
-)
+conn = PG.connect(ENV.fetch("DATABASE_URL"))
 
 def username(topic, users)
   users.select{ |user| user['id'] == topic[9] }.first['username']
