@@ -11,8 +11,7 @@ class PGSuiteRunner
 
   HOST = ENV['POSTGRES_PORT_5432_TCP_ADDR'] || 'localhost'
   PORT = ENV['POSTGRES_PORT_5432_TCP_PORT'] || 5432
-  DB_NAME = 'rubybench'
-  DB_USER = 'postgres'
+  DATABASE_URL = "postgres://postgres@#{HOST}:#{PORT}/rubybench"
 
   def self.run(options)
     new(options).run
@@ -39,7 +38,7 @@ class PGSuiteRunner
   end
 
   def run_benchmark(bm_script)
-    execute("PG_MASTER=1 HOST=#{HOST} PORT=#{PORT} DB_NAME=#{DB_NAME} DB_USER=#{DB_USER} ruby #{bm_script}")
+    execute("PG_MASTER=1 DATABASE_URL=#{DATABASE_URL} ruby #{bm_script}")
   end
 
   def execute(command)
