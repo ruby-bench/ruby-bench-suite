@@ -23,6 +23,7 @@ if rails_master?
   gem 'turbolinks', github: 'turbolinks/turbolinks-rails', branch: 'master'
 else
   gem 'rails', path: '/rails'
+  gem 'arel', '~> 8.0'
 end
 
 if mysql2_prepared_statements?
