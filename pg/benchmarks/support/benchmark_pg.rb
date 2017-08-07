@@ -1,5 +1,7 @@
 require 'pg'
+
 require_relative '../../../support/benchmark_runner'
+require_relative '../../../support/helpers'
 
 module Benchmark
   module PG

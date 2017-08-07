@@ -13,3 +13,4 @@ else
 end
 
 gem 'benchmark-ips', '~> 2.2.0'
+gem 'byebug'
