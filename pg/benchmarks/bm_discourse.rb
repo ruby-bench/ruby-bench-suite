@@ -65,10 +65,9 @@ Benchmark.pg("pg/discourse", time: 5) do
   )
 
   # Preload users
-  user_ids = topics.map { |row| row['user_id'] }
-  users = conn.exec("SELECT users.* FROM users WHERE users.id IN (#{user_ids.join(',')})")
+  conn.exec("SELECT users.* FROM users WHERE users.id IN (#{user['id']})")
 
   topics.each_row do |topic|
-    str << "id: #{topic[0]} title: #{topic[3]} created_at: #{Time.parse(topic[1]).iso8601} user: #{username(topic, users)}\n"
+    str << "id: #{topic[0]} title: #{topic[3]} created_at: #{Time.parse(topic[1]).iso8601} user: #{user['username']}\n"
   end
 end
