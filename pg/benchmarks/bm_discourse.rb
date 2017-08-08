@@ -9,10 +9,6 @@ db_setup script: "bm_discourse_setup.rb"
 
 conn = PG.connect(ENV.fetch("DATABASE_URL"))
 
-def username(topic, users)
-  users.select{ |user| user['id'] == topic[9] }.first['username']
-end
-
 user = conn.exec("SELECT * FROM users ORDER BY users.id LIMIT 1").first
 Benchmark.pg("pg/discourse", time: 5) do
   str = ""
