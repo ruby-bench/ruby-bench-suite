@@ -11,14 +11,9 @@ require 'digest'
 
 RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/sequel/benchmarks/'
 
-postgres_tcp_addr = ENV['POSTGRES_PORT_5432_TCP_ADDR'] || 'localhost'
-postgres_port = ENV['POSTGRES_PORT_5432_TCP_PORT'] || 5432
-mysql_tcp_addr = ENV['MYSQL_PORT_3306_TCP_ADDR'] || 'localhost'
-mysql_port = ENV['MYSQL_PORT_3306_TCP_PORT'] || 3306
-
 DATABASE_URLS = {
-  psql: "postgres://postgres@#{postgres_tcp_addr}:#{postgres_port}/rubybench",
-  mysql: "mysql2://root@#{mysql_tcp_addr}:#{mysql_port}/rubybench",
+  psql: "postgres://postgres@postgres:5432/rubybench",
+  mysql: "mysql2://root@mysql:3306/rubybench",
 }
 
 class BenchmarkDriver
