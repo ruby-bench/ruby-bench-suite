@@ -17,7 +17,6 @@ end
 
 class User < Sequel::Model
   self.raise_on_save_failure = true
-  self.set_allowed_columns *columns[1..-1]
 end
 
 attributes = {}

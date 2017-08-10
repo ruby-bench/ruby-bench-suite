@@ -26,7 +26,6 @@ class Post < Sequel::Model
     validates_includes %w(small medium large), :size, message: "%{value} is not a valid size"
   end
   self.raise_on_save_failure = true
-  self.set_allowed_columns :title, :author, :body, :sequence, :age, :legacy_code, :size
 end
 
 Post.create({
