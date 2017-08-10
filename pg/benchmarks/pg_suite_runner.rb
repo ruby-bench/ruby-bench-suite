@@ -9,9 +9,7 @@ require 'digest'
 class PGSuiteRunner
   RAW_URL = 'https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/pg/benchmarks/'
 
-  HOST = ENV['POSTGRES_PORT_5432_TCP_ADDR'] || 'localhost'
-  PORT = ENV['POSTGRES_PORT_5432_TCP_PORT'] || 5432
-  DATABASE_URL = "postgres://postgres@#{HOST}:#{PORT}/rubybench"
+  DATABASE_URL = "postgres://postgres@postgres:5432/rubybench"
 
   def self.run(options)
     new(options).run
