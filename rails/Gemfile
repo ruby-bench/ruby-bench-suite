@@ -10,9 +10,10 @@ module ::Kernel
   end
 end
 
+gem 'arel', github: 'rails/arel', branch: 'master'
+
 if rails_master?
   gem 'rails', github: 'rails'
-  gem 'arel', github: 'rails/arel', branch: 'master'
   gem 'rack', github: 'rack/rack', branch: 'master'
   gem 'sprockets-rails', github: 'rails/sprockets-rails', branch: 'master'
   gem 'sprockets', github: 'rails/sprockets', branch: 'master'
@@ -23,7 +24,6 @@ if rails_master?
   gem 'turbolinks', github: 'turbolinks/turbolinks-rails', branch: 'master'
 else
   gem 'rails', path: '/rails'
-  gem 'arel', '~> 8.0'
 end
 
 if mysql2_prepared_statements?
