@@ -16,7 +16,6 @@ DB.add_index :users, :email, unique: true
 
 class User < Sequel::Model
   self.raise_on_save_failure = true
-  self.set_allowed_columns :name, :email, :created_at, :updated_at
 end
 
 1000.times do |i|
