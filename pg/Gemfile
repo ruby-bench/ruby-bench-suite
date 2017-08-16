@@ -9,7 +9,7 @@ end
 if pg_master?
   gem 'pg', github: 'ged/ruby-pg'
 else
-  gem 'pg', path: '/pg'
+  gem 'pg', path: '/ruby-pg'
 end
 
 gem 'benchmark-ips', '~> 2.2.0'
