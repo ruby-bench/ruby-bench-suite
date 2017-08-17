@@ -43,9 +43,7 @@ class PGSuiteRunner
   end
 
   def execute(command)
-    output = JSON.parse(`#{command}`)
-    puts "[#{output['label']}] #{output['iterations_per_second']} ips, #{output['total_allocated_objects_per_iteration']} objects"
-    output
+    p JSON.parse(`#{command}`)
   end
 
   def send_results(output, bm_script)
@@ -60,7 +58,7 @@ class PGSuiteRunner
       'benchmark_type[category]' => output['label'],
       'benchmark_type[script_url]' => "#{RAW_URL}#{Pathname.new(bm_script).basename}",
       'benchmark_type[digest]' => generate_digest(bm_script),
-      'benchmark_run[environment]' => "#{`ruby -v`}",
+      'benchmark_run[environment]' => `ruby -v`,
       'repo' => 'ruby-pg',
       'organization' => 'ged',
       'commit_hash' => ENV['PG_COMMIT_HASH']
