@@ -36,7 +36,7 @@ class PGSuiteRunner
   end
 
   def run_benchmark(bm_script)
-    execute("PG_MASTER=1 DATABASE_URL=#{DATABASE_URL} ruby #{bm_script}")
+    execute("DATABASE_URL=#{DATABASE_URL} ruby #{bm_script}")
   end
 
   def execute(command)
