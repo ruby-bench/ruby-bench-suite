@@ -8,11 +8,12 @@ DB.create_table!(:users) do
   primary_key :id
   String :name, size: 255
   String :email, size: 255
-  DateTime :created_at, null: true
-  DateTime :updated_at, null: true
+  DateTime :created_at, null: false
+  DateTime :updated_at, null: false
 end
 
 class User < Sequel::Model
+  plugin :timestamps, update_on_create: true
 end
 
 attributes = {
