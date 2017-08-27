@@ -2,16 +2,10 @@ require 'bundler/setup'
 require 'active_record'
 require_relative 'support/benchmark_rails'
 
+db_setup script: "bm_destroy_setup.rb"
+
 ActiveRecord::Base.establish_connection(ENV.fetch('DATABASE_URL'))
-
 ActiveRecord::Migration.verbose = false
-
-ActiveRecord::Schema.define do
-  create_table :users, force: true do |t|
-    t.string :name, :email
-    t.timestamps null: false
-  end
-end
 
 class User < ActiveRecord::Base; end
 
