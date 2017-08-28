@@ -2,26 +2,18 @@ require 'bundler/setup'
 require 'sequel'
 require_relative 'support/benchmark_sequel'
 
+db_setup script: "bm_create_string_columns_setup.rb"
+
 DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
-
-COUNT=25
-
-DB.create_table!(:users) do
-  primary_key :id
-  COUNT.times do |i|
-    String :"column#{i}", size: 255
-  end
-  DateTime :created_at, null: true
-  DateTime :updated_at, null: true
-end
 
 class User < Sequel::Model
   self.raise_on_save_failure = true
+  plugin :timestamps, update_on_create: true
 end
 
 attributes = {}
 
-COUNT.times do |i|
+25.times do |i|
   attributes[:"column#{i}"] = "Some string #{i}"
 end
 
