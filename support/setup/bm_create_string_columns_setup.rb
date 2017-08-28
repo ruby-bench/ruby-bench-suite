@@ -1,14 +1,13 @@
 require "bundler/setup"
 require "active_record"
+require_relative "../helpers"
 
 ActiveRecord::Base.establish_connection(ENV.fetch('DATABASE_URL'))
 ActiveRecord::Migration.verbose = false
 
-COUNT = 25
-
 ActiveRecord::Schema.define do
   create_table :users, force: true do |t|
-    COUNT.times do |i|
+    STRING_COLUMNS_COUNT.times do |i|
       t.string :"column#{i}"
     end
 
