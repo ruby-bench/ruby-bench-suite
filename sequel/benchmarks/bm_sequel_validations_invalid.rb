@@ -2,18 +2,9 @@ require 'bundler/setup'
 require 'sequel'
 require_relative 'support/benchmark_sequel'
 
-DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
+db_setup script: "bm_validations_invalid_setup.rb"
 
-DB.create_table!(:posts) do
-  primary_key :id
-  String :title, size: 255
-  String :author, size: 255
-  String :body, text: true
-  Fixnum :sequence
-  Fixnum :age
-  String :legacy_code, size: 255
-  String :size, size: 255
-end
+DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
 
 class Post < Sequel::Model
   plugin :validation_helpers

@@ -1,3 +1,5 @@
+STRING_COLUMNS_COUNT = 25
+
 def db_adapter
   ENV['DATABASE_URL'].split(":")[0]
 end
