@@ -7,7 +7,8 @@ ActiveRecord::Migration.verbose = false
 
 ActiveRecord::Schema.define do
   create_table :users, force: true do |t|
-    t.string :name, :email
+    t.string :name
+    t.string :email
     t.boolean :approved
     t.integer :age
     t.datetime :birthday
