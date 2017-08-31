@@ -9,7 +9,7 @@ ActiveRecord::Migration.verbose = false
 
 class User < ActiveRecord::Base; end
 
-Benchmark.rails("activerecord/#{db_adapter}_scope_where", time: 5) do
+Benchmark.rails("activerecord/#{db_adapter}_scope_where_over_select", time: 5) do
   str = ""
   User
     .where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")

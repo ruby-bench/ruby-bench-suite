@@ -9,7 +9,7 @@ ActiveRecord::Migration.verbose = false
 
 class User < ActiveRecord::Base; end
 
-Benchmark.rails("activerecord/#{db_adapter}_finders_first", time: 5) do
+Benchmark.rails("activerecord/#{db_adapter}_finders_first_over_select", time: 5) do
   user = User.first
   str = "name: #{user.name} email: #{user.email}"
 end
