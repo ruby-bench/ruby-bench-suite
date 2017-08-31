@@ -9,6 +9,6 @@ DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
 class User < Sequel::Model; end
 
 Benchmark.sequel("sequel/#{db_adapter}_finders_first", time: 5) do
-  user = User.select(:name, :email).first
+  user = User.first
   str = "name: #{user.name} email: #{user.email}"
 end

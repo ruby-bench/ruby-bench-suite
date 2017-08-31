@@ -18,7 +18,7 @@ end
 
 Benchmark.sequel("sequel/#{db_adapter}_scope_all_with_default_scope", time: 5) do
   str = ""
-  User.select(:name, :email).each do |user|
+  User.all.each do |user|
     str << "name: #{user.name} email: #{user.email}\n"
   end
 end
