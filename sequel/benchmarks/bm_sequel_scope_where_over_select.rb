@@ -8,7 +8,7 @@ DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
 
 class User < Sequel::Model; end
 
-Benchmark.sequel("sequel/#{db_adapter}_scope_where", time: 5) do
+Benchmark.sequel("sequel/#{db_adapter}_scope_where_over_select", time: 5) do
   str = ""
   User
     .where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
