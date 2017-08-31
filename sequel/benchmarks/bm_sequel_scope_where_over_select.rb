@@ -8,10 +8,9 @@ DB = Sequel.connect(ENV.fetch('DATABASE_URL'))
 
 class User < Sequel::Model; end
 
-Benchmark.sequel("sequel/#{db_adapter}_scope_where", time: 5) do
+Benchmark.sequel("sequel/#{db_adapter}_scope_where_over_select", time: 5) do
   str = ""
   User
-    .select(:name, :email)
     .where(name: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
     .where(Sequel.lit('email LIKE ?', 'foobar00%@email.com'))
     .each { |user| str << "name: #{user.name} email: #{user.email}\n" }

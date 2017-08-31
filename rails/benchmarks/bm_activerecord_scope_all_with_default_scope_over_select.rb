@@ -11,9 +11,9 @@ class User < ActiveRecord::Base
   default_scope { where(admin: true) }
 end
 
-Benchmark.rails("activerecord/#{db_adapter}_scope_all_with_default_scope", time: 5) do
+Benchmark.rails("activerecord/#{db_adapter}_scope_all_with_default_scope_over_select", time: 5) do
   str = ""
-  User.select(:name, :email).each do |user|
+  User.all.each do |user|
     str << "name: #{user.name} email: #{user.email}\n"
   end
 end
