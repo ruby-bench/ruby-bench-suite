@@ -9,7 +9,7 @@ ActiveRecord::Migration.verbose = false
 
 class User < ActiveRecord::Base; end
 
-Benchmark.rails("activerecord/#{db_adapter}_pluck", time: 5) do
+Benchmark.rails("activerecord/#{db_adapter}_find_by_sql", time: 5) do
   user = User.find_by("email = :email", email: 'foobar@email.com')
   str = "#{user.email} #{user.name}"
 end
