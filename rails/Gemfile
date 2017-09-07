@@ -10,9 +10,8 @@ module ::Kernel
   end
 end
 
-gem 'arel', github: 'rails/arel', branch: 'master'
-
 if rails_master?
+  gem 'arel', github: 'rails/arel', branch: 'master'
   gem 'rails', github: 'rails'
   gem 'rack', github: 'rack/rack', branch: 'master'
   gem 'sprockets-rails', github: 'rails/sprockets-rails', branch: 'master'
