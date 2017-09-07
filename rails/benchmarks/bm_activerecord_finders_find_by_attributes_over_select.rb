@@ -10,6 +10,6 @@ ActiveRecord::Migration.verbose = false
 class User < ActiveRecord::Base; end
 
 Benchmark.rails("activerecord/#{db_adapter}_finders_find_by_attributes_over_select", time: 5) do
-  user = User.find_by_email('shatrov@me.com')
+  user = User.find_by(email: 'shatrov@me.com')
   str = "name: #{user.name} email: #{user.email}"
 end
