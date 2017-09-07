@@ -9,6 +9,8 @@ ActiveRecord::Migration.verbose = false
 
 class User < ActiveRecord::Base; end
 
-Benchmark.rails("activerecord/#{db_adapter}_pluck", time: 5) do
-  User.all.pluck(:id, :name)
+last_user_id = User.last.id
+
+Benchmark.rails("activerecord/#{db_adapter}_pluck_with_scope", time: 5) do
+  User.where(id: last_user_id).pluck(:name)
 end
