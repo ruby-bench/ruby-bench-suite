@@ -8,6 +8,11 @@ module ::Kernel
   def mysql2_prepared_statements?
     ENV["MYSQL2_PREPARED_STATEMENTS"] == '1'
   end
+  
+  def v_4_0_x?
+    major, minor, micro = ENV["RAILS_VERSION"].to_s.split(".")
+    major == "4" && minor == "0"
+  end
 end
 
 if rails_master?
@@ -33,7 +38,10 @@ else
   gem 'mysql2', '0.3.18'
 end
 
-gem 'tzinfo-data'
+unless v_4_0_x?
+  gem 'tzinfo-data', '~> 1.2'
+end
+
 gem 'pg', '0.18.1'
 gem 'benchmark-ips', '~> 2.2.0'
 gem 'em-hiredis', '~> 0.3.0'
