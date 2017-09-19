@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_so_meteor_contest.rb

@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_vm2_defined_method.rb

@@ -1,0 +1,1 @@
+../../ruby/benchmarks/bm_vm2_poly_method_ov.rb
