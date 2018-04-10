@@ -21,6 +21,24 @@ checksums = []
   puts "Checksum: #{checksum}"
 end
 
+if can_jit = Gem::Version.new(`ruby -e "puts RUBY_VERSION"`.chomp) >= Gem::Version.new('2.6.0')
+  jit_results = []
+  jit_checksums = []
+
+  3.times do |i|
+    output = `ruby --jit #{File.dirname(__FILE__)}/optcarrot/bin/optcarrot --benchmark #{File.dirname(__FILE__)}/optcarrot/examples/#{ROM}`
+    fps, checksum = output.split("\n")
+    fps = fps[/fps: (.+)/, 1].to_i
+    jit_results << fps
+    checksum = checksum[/checksum: (.+)/, 1]
+    jit_checksums << checksum
+
+    puts "Iteration --jit #{i + 1}..."
+    puts "FPS: #{fps}"
+    puts "Checksum: #{checksum}"
+  end
+end
+
 avg_fps = results.inject{ |sum, el| sum + el }.to_f / results.size
 checksum = checksums.uniq.first
 
@@ -34,6 +52,12 @@ if(ENV['RUBY_COMMIT_HASH'])
   initiator_hash['commit_hash'] = ENV['RUBY_COMMIT_HASH']
 elsif(ENV['RUBY_VERSION'])
   initiator_hash['version'] = ENV['RUBY_VERSION']
+end
+
+if jit_results
+  avg_jit_fps = jit_results.inject{ |sum, el| sum + el }.to_f / results.size
+  jit_checksum = jit_checksums.uniq.first
+  initiator_hash["benchmark_run[result][default_jit]"] = avg_jit_fps
 end
 
 request.set_form_data({
@@ -53,4 +77,7 @@ puts "Posting results to Web UI...."
 puts "Average FPS: #{avg_fps}"
 puts "Checksum: #{checksum}"
 
-
+if avg_jit_fps
+  puts "Average FPS with JIT: #{avg_jit_fps}"
+  puts "Checksum with JIT: #{jit_checksum}"
+end
