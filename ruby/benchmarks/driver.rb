@@ -84,6 +84,7 @@ class BenchmarkDriver
     @loop_wl1 = @loop_wl2 = nil
     @ruby_arg = opt[:ruby_arg] || nil
     @opt = opt
+    @jit = opt[:jit]
 
     # [[name, [[r-1-1, r-1-2, ...], [r-2-1, r-2-2, ...]]], ...]
     @results = []
@@ -97,20 +98,24 @@ class BenchmarkDriver
     end
   end
 
-  def adjusted_results name, results
+  def adjusted_results(name, results, jit=false)
     s = nil
     results.each_with_index{|e, i|
       r = e.min
       case name
       when /^vm1_/
-        if @loop_wl1
-          r -= @loop_wl1[i]
+        wl1 = jit ? @loop_wl1_jit : @loop_wl1
+
+        if wl1
+          r -= wl1[i]
           r = 0 if r < 0
           s = '*'
         end
       when /^vm2_/
-        if @loop_wl2
-          r -= @loop_wl2[i]
+        wl2 = jit ? @loop_wl2_jit : @loop_wl2
+
+        if wl2
+          r -= wl2[i]
           r = 0 if r < 0
           s = '*'
         end
@@ -149,8 +154,10 @@ class BenchmarkDriver
 
     output "Execution time (sec)"
     output "name\t#{@execs.map{|(_, v)| v}.join("\t")}"
-    @results.each{|v, result|
+
+    @results.each do |v, result|
       rets = []
+
       s = adjusted_results(v, result){|r|
         rets << sprintf("%.3f", r)
       }
@@ -161,6 +168,17 @@ class BenchmarkDriver
       request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
 
       initiator_hash = {}
+
+      if @jit_results && @jit_results[v]
+        jit_rets = []
+
+        s_jit = adjusted_results(v, [@jit_results[v]], true) do |r|
+          r = sprintf("%.3f", r)
+          jit_rets << r
+          initiator_hash["benchmark_run[result][#{v}_jit]"] = r
+        end
+      end
+
       if(ENV['RUBY_COMMIT_HASH'])
         initiator_hash['commit_hash'] = ENV['RUBY_COMMIT_HASH']
       elsif(ENV['RUBY_VERSION'])
@@ -182,7 +200,11 @@ class BenchmarkDriver
       http.request(request)
       output "Posting results to Web UI...."
       output "#{v}#{s}\t#{rets.join("\t")}"
-    }
+
+      if jit_rets
+        output "#{v}#{s_jit} --jit\t#{jit_rets.join("\t")}"
+      end
+    end
 
     if @execs.size > 1
       output
@@ -247,8 +269,16 @@ class BenchmarkDriver
 
       if /bm_loop_whileloop.rb/ =~ file
         @loop_wl1 = r[1].map{|e| e.min}
+
+        if @jit
+          @loop_wl1_jit = [@jit_results["loop_whileloop"]].map { |e| e.min }
+        end
       elsif /bm_loop_whileloop2.rb/ =~ file
         @loop_wl2 = r[1].map{|e| e.min}
+
+        if @jit
+          @loop_wl2_jit = [@jit_results["loop_whileloop2"]].map { |e| e.min }
+        end
       end
     }
   end
@@ -268,6 +298,7 @@ class BenchmarkDriver
     end
 
     result = [name]
+
     result << @execs.map{|(e, v)|
       (0...@repeat).map{
         message_print "#{v}\t"
@@ -279,6 +310,27 @@ class BenchmarkDriver
       }
     }
     @results << result
+
+    if @jit
+      @jit_results ||= {}
+
+      @execs.map{|(e, v)|
+        if Gem::Version.new(`#{e} -e "puts RUBY_VERSION"`.chomp) >= Gem::Version.new('2.6.0')
+          @jit_results[name] ||= []
+
+          (0...@repeat).map{
+            message_print "#{v} --jit\t"
+            progress_message '.'
+
+            m = measure(e, file, true)
+            message "#{m}"
+            @jit_results[name] << m
+            m
+          }
+        end
+      }
+    end
+
     result
   end
 
@@ -288,8 +340,8 @@ class BenchmarkDriver
     end
   end
 
-  def measure executable, file
-    cmd = "#{executable} #{@ruby_arg} #{file}"
+  def measure(executable, file, jit=false)
+    cmd = "#{executable} #{@ruby_arg} #{jit ? '--jit' : ''} #{file}"
 
     m = Benchmark.measure{
       system(cmd, out: File::NULL)
@@ -333,6 +385,9 @@ if __FILE__ == $0
     }
     o.on('-x', '--exclude <PATTERN1,PATTERN2,PATTERN3>', "Benchmark exclude pattern"){|e|
       opt[:exclude] = e.split(',')
+    }
+    o.on('--with-jit', "Run benchmarks once with JIT enabled and once without"){
+      opt[:jit] = true
     }
     o.on('-r', '--repeat-count [NUM]', "Repeat count"){|n|
       opt[:repeat] = n.to_i
