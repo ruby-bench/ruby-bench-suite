@@ -1,3 +1,4 @@
+require 'digest'
 require_relative 'optcarrot/lib/optcarrot'
 
 ENV['BENCHMARK_TYPE_SCRIPT_URL'] = 'https://raw.githubusercontent.com/mame/optcarrot/master/lib/optcarrot/nes.rb'
