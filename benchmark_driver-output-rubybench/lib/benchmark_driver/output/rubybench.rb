@@ -14,19 +14,12 @@ require 'net/http'
 #   ORGANIZATION_NAME
 class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
   # For maintainability, this doesn't support streaming progress output.
-  # @param [Hash{ BenchmarkDriver::Job => Hash{ BenchmarkDriver::Context => { BenchmarkDriver::Metric => Float } } }] result
+  # @param [Hash{ BenchmarkDriver::Job => Hash{ BenchmarkDriver::Context => BenchmarkDriver::Result } }] job_context_result
   # @param [Array<BenchmarkDriver::Metric>] metrics
-  def bulk_output(result:, metrics:)
+  def bulk_output(job_context_result:, metrics:)
     metrics.each do |metric|
-      result.each do |job, context_metric_value|
-        context_value = {}
-        context_metric_value.each do |context, metric_value|
-          if metric_value.key?(metric)
-            context_value[context] = metric_value[metric]
-          end
-        end
-
-        create_benchmark_run(job, metric, context_value)
+      job_context_result.each do |job, context_result|
+        create_benchmark_run(job, metric, context_result)
       end
     end
   end
@@ -36,8 +29,8 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
   # Create BenchmarkRun record on RubyBench
   # @param [BenchmarkDriver::Job] job
   # @param [BenchmarkDriver::Metric] metric
-  # @param [Hash{ BenchmarkDriver::Context => Float }] context_value
-  def create_benchmark_run(job, metric, context_value)
+  # @param [Hash{ BenchmarkDriver::Context => BenchmarkDriver::Result }] context_result
+  def create_benchmark_run(job, metric, context_result)
     http = Net::HTTP.new(ENV.fetch('API_URL', 'rubybench.org'), 443)
     http.use_ssl = true
     request = Net::HTTP::Post.new('/benchmark_runs')
@@ -51,12 +44,12 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
     end
 
     result_hash = {}
-    context_value.each do |context, value|
-      initiator_hash["benchmark_run[result][#{context.name}]"] = value
+    context_result.each do |context, result|
+      initiator_hash["benchmark_run[result][#{context.name}]"] = result.values.fetch(metric)
     end
 
-    context = context_value.keys.first
-    ruby_version = IO.popen([*context.executable.command, '-v'], &:read)
+    ruby_version = context_result.keys.first.executable.description
+    environment = context_result.values.first.environment
 
     request.set_form_data({
       'benchmark_result_type[name]' => metric.name,
@@ -64,7 +57,7 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
       'benchmark_type[category]' => job.name,
       'benchmark_type[script_url]' => ENV.fetch('BENCHMARK_TYPE_SCRIPT_URL'),
       'benchmark_type[digest]' => ENV.fetch('BENCHMARK_TYPE_DIGEST'),
-      'benchmark_run[environment]' => { 'Ruby version' => ruby_version }.merge(context.environment).to_yaml,
+      'benchmark_run[environment]' => { 'Ruby version' => ruby_version }.merge(environment).to_yaml,
       'repo' => ENV.fetch('REPO_NAME'),
       'organization' => ENV.fetch('ORGANIZATION_NAME'),
     }.merge(initiator_hash).merge(result_hash))
