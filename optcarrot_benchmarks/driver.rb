@@ -8,7 +8,7 @@ ENV['ORGANIZATION_NAME']         = 'ruby'
 
 ruby_options = ['-e', "default::#{RbConfig.ruby}"]
 if Gem::Version.new(`ruby -e "puts RUBY_VERSION"`.chomp) >= Gem::Version.new('2.6.0')
-  ruby_options.concat(['-e', "default_jit::#{RbConfig.ruby},--jit"])
+  ruby_options.concat(['-e', "default_jit::#{RbConfig.ruby} --jit"])
 end
 
 benchmark_yml = File.expand_path('./optcarrot/benchmark.yml', __dir__)
