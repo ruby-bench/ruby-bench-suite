@@ -41,12 +41,19 @@ module Benchmark
     end
 
     def self.print_output(ips_result, objects_result, label, version)
+      standard_deviation =
+        # https://github.com/evanphx/benchmark-ips/commit/b42c3dfbe104f32ce7db075a01858d598da87a8b
+        if ips_result.respond_to?(:error_percentage)
+          ips_result.error_percentage
+        else
+          ips_result.stddev_percentage # deprecated
+        end
       output = {
         label: label,
         version: version,
         iterations_per_second: ips_result.ips,
-        iterations_per_second_standard_deviation: ips_result.stddev_percentage,
-        total_allocated_objects_per_iteration: objects_result
+        iterations_per_second_standard_deviation: standard_deviation,
+        total_allocated_objects_per_iteration: objects_result,
       }.to_json
 
       puts output
