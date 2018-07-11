@@ -4,9 +4,12 @@ require 'digest'
 require 'optparse'
 require 'shellwords'
 
-opt = { pattern: [] }
+opt = { pattern: [], runner: 'seconds' }
 
 OptionParser.new{|o|
+  o.on('-r', '--runner RUNNER', String, "Runner (default: seconds)"){|r|
+    opt[:runner] = r
+  }
   o.on('-e', '--executables [EXEC]', "Specify benchmark target (e1::path1)"){|e|
     opt[:exec] = e # discard...
   }
@@ -16,7 +19,7 @@ OptionParser.new{|o|
   o.on('--with-jit', "Run benchmarks once with JIT enabled and once without"){
     opt[:jit] = true
   }
-  o.on('-r', '--repeat-count [NUM]', "Repeat count"){|n|
+  o.on('--repeat-count [NUM]', "Repeat count"){|n|
     opt[:repeat] = n.to_i
   }
   o.on('-o', '--output-file [FILE]', "Output file"){|f|
@@ -44,7 +47,7 @@ benchmarks.sort.each do |benchmark|
 
   command = [
     'benchmark-driver', benchmark, *execs, *filter,
-    '--runner', 'seconds', '--output', 'rubybench',
+    '--runner', opt[:runner], '--output', 'rubybench',
     '--repeat-count', opt[:repeat].to_s,
     '--repeat-result', 'best',
     '--timeout', '60',
