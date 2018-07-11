@@ -6,7 +6,7 @@ require 'tempfile'
 require 'shellwords'
 
 # Max resident set size
-class BenchmarkDriver::Runner::Memory
+class BenchmarkDriver::Runner::Rsskb
   # Using the RubyBench's original label
   METRIC = BenchmarkDriver::Metric.new(
     name: 'RSS memory usage', unit: 'Kilobytes', larger_better: false, worse_word: 'larger',
