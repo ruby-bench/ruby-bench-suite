@@ -4,7 +4,7 @@ require 'digest'
 require 'optparse'
 require 'shellwords'
 
-opt = {}
+opt = { pattern: [] }
 
 OptionParser.new{|o|
   o.on('-e', '--executables [EXEC]', "Specify benchmark target (e1::path1)"){|e|
