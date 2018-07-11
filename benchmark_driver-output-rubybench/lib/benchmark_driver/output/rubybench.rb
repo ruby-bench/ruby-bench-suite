@@ -68,6 +68,7 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
       'organization' => ENV.fetch('ORGANIZATION_NAME'),
     }.merge(initiator_hash).merge(result_hash))
 
-    puts http.request(request).body
+    response = http.request(request)
+    puts "status: #{response.code}, body: #{response.body.inspect}"
   end
 end
