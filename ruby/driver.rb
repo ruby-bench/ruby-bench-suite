@@ -47,6 +47,7 @@ benchmarks.sort.each do |benchmark|
     '--runner', 'seconds', '--output', 'rubybench',
     '--repeat-count', opt[:repeat].to_s,
     '--repeat-result', 'best',
+    '--timeout', '60',
   ]
 
   puts "+ #{command.shelljoin}"
