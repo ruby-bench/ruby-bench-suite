@@ -29,7 +29,7 @@ filter = opt.fetch(:pattern).map { |p| ['--filter', p] }.flatten
 benchmark_dir = File.expand_path('./benchmark', __dir__)
 benchmarks = Dir.glob("#{benchmark_dir}/*.rb") + Dir.glob("#{benchmark_dir}/*.yml")
 
-benchmarks.each do |benchmark|
+benchmarks.sort.each do |benchmark|
   name = File.basename(benchmark).sub(/\.[^.]+\z/, '')
   execs = ['-e', "#{name}::#{RbConfig.ruby.shellescape}"]
   if opt[:jit]
