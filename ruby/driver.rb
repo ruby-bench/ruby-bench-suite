@@ -33,7 +33,11 @@ benchmark_dir = File.expand_path('./benchmark', __dir__)
 benchmarks = Dir.glob("#{benchmark_dir}/*.rb") + Dir.glob("#{benchmark_dir}/*.yml")
 
 benchmarks.sort.each do |benchmark|
-  name = File.basename(benchmark).sub(/\.[^.]+\z/, '')
+  if opt[:runner] == 'rsskb'
+    name = 'rss_kb'
+  else
+    name = File.basename(benchmark).sub(/\.[^.]+\z/, '')
+  end
   execs = ['-e', "#{name}::#{RbConfig.ruby.shellescape}"]
   if opt[:jit]
     execs += ['-e', "#{name}_jit::#{RbConfig.ruby.shellescape} --jit"]
