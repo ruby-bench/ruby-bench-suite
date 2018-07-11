@@ -61,5 +61,4 @@ benchmarks.sort.each do |benchmark|
   unless system(command.shelljoin)
     abort "Failed to execute: #{command.shelljoin}"
   end
-  puts
 end
