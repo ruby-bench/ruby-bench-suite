@@ -8,7 +8,7 @@ opt = {}
 
 OptionParser.new{|o|
   o.on('-e', '--executables [EXEC]', "Specify benchmark target (e1::path1)"){|e|
-     opt[:exec] = e
+    opt[:exec] = e # discard...
   }
   o.on('-p', '--pattern <PATTERN1,PATTERN2,PATTERN3>', "Benchmark name pattern"){|p|
     opt[:pattern] = p.split(',')
@@ -31,9 +31,9 @@ benchmarks = Dir.glob("#{benchmark_dir}/*.rb") + Dir.glob("#{benchmark_dir}/*.ym
 
 benchmarks.each do |benchmark|
   name = File.basename(benchmark).sub(/\.[^.]+\z/, '')
-  execs = ['-e', "#{name}::#{opt.fetch(:exec)}"]
+  execs = ['-e', "#{name}::#{RbConfig.ruby.shellescape}"]
   if opt[:jit]
-    execs += ['-e', "#{name}_jit::#{opt.fetch(:exec)} --jit"]
+    execs += ['-e', "#{name}_jit::#{RbConfig.ruby.shellescape} --jit"]
   end
 
   ENV['REPO_NAME'] = 'ruby'
