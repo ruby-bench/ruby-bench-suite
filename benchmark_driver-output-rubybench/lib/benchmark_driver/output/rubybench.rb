@@ -12,6 +12,8 @@ require 'net/http'
 #   BENCHMARK_TYPE_DIGEST
 #   REPO_NAME
 #   ORGANIZATION_NAME
+# Optional environment variables:
+#   RUBY_ENVIRONMENT
 class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
   # For maintainability, this doesn't support streaming progress output.
   # @param [Hash{ BenchmarkDriver::Job => Hash{ BenchmarkDriver::Context => BenchmarkDriver::Result } }] job_context_result
@@ -49,7 +51,11 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
     end
 
     ruby_version = context_result.keys.first.executable.description
-    environment = context_result.values.first.environment
+    if ENV['RUBY_ENVIRONMENT'] == 'true'
+      environment = ruby_version
+    else
+      environment = { 'Ruby version' => ruby_version }.merge(context_result.values.first.environment).to_yaml
+    end
 
     request.set_form_data({
       'benchmark_result_type[name]' => metric.name,
@@ -57,7 +63,7 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
       'benchmark_type[category]' => job.name,
       'benchmark_type[script_url]' => ENV.fetch('BENCHMARK_TYPE_SCRIPT_URL'),
       'benchmark_type[digest]' => ENV.fetch('BENCHMARK_TYPE_DIGEST'),
-      'benchmark_run[environment]' => { 'Ruby version' => ruby_version }.merge(environment).to_yaml,
+      'benchmark_run[environment]' => environment,
       'repo' => ENV.fetch('REPO_NAME'),
       'organization' => ENV.fetch('ORGANIZATION_NAME'),
     }.merge(initiator_hash).merge(result_hash))

@@ -1,0 +1,57 @@
+#!/usr/bin/env ruby
+
+require 'digest'
+require 'optparse'
+require 'shellwords'
+
+opt = {}
+
+OptionParser.new{|o|
+  o.on('-e', '--executables [EXEC]', "Specify benchmark target (e1::path1)"){|e|
+     opt[:exec] = e
+  }
+  o.on('-p', '--pattern <PATTERN1,PATTERN2,PATTERN3>', "Benchmark name pattern"){|p|
+    opt[:pattern] = p.split(',')
+  }
+  o.on('--with-jit', "Run benchmarks once with JIT enabled and once without"){
+    opt[:jit] = true
+  }
+  o.on('-r', '--repeat-count [NUM]', "Repeat count"){|n|
+    opt[:repeat] = n.to_i
+  }
+  o.on('-o', '--output-file [FILE]', "Output file"){|f|
+    opt[:output] = f # discard...
+  }
+}.parse!(ARGV)
+
+filter = opt.fetch(:pattern).map { |p| ['--filter', p] }.flatten
+
+benchmark_dir = File.expand_path('./benchmark', __dir__)
+benchmarks = Dir.glob("#{benchmark_dir}/*.rb") + Dir.glob("#{benchmark_dir}/*.yml")
+
+benchmarks.each do |benchmark|
+  name = File.basename(benchmark).sub(/\.[^.]+\z/, '')
+  execs = ['-e', "#{name}::#{opt.fetch(:exec)}"]
+  if opt[:jit]
+    execs += ['-e', "#{name}_jit::#{opt.fetch(:exec)} --jit"]
+  end
+
+  ENV['REPO_NAME'] = 'ruby'
+  ENV['ORGANIZATION_NAME'] = 'ruby'
+  ENV['BENCHMARK_TYPE_DIGEST'] = Digest::SHA2.file("#{File.dirname(__FILE__)}/benchmark/#{File.basename(benchmark)}").hexdigest
+  ENV['BENCHMARK_TYPE_SCRIPT_URL'] = "https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/ruby/benchmark/#{File.basename(benchmark)}"
+  ENV['RUBY_ENVIRONMENT'] = 'true'
+
+  command = [
+    'benchmark-driver', benchmark, *execs, *filter,
+    '--runner', 'seconds', '--output', 'rubybench',
+    '--repeat-count', opt[:repeat].to_s,
+    '--repeat-result', 'best',
+  ]
+
+  puts "+ #{command.shelljoin}"
+  unless system(command.shelljoin)
+    abort "Failed to execute: #{command.shelljoin}"
+  end
+  puts
+end
