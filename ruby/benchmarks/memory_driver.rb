@@ -300,38 +300,14 @@ if __FILE__ == $0
          opt[:execs] << path
        }
     }
-    o.on('--rbenv [VERSIONS]', 'Specify benchmark targets with rbenv version (vX.X.X;vX.X.X;...)'){|v|
-      v.split(/;/).each{|version|
-        opt[:execs] << "#{version}::#{`RBENV_VERSION='#{version}' rbenv which ruby`.rstrip}"
-      }
-    }
-    o.on('-d', '--directory [DIRECTORY]', "Benchmark suites directory"){|d|
-      opt[:dir] = d
-    }
     o.on('-p', '--pattern <PATTERN1,PATTERN2,PATTERN3>', "Benchmark name pattern"){|p|
       opt[:pattern] = p.split(',')
-    }
-    o.on('-x', '--exclude <PATTERN1,PATTERN2,PATTERN3>', "Benchmark exclude pattern"){|e|
-      opt[:exclude] = e.split(',')
     }
     o.on('-r', '--repeat-count [NUM]', "Repeat count"){|n|
       opt[:repeat] = n.to_i
     }
     o.on('-o', '--output-file [FILE]', "Output file"){|f|
       opt[:output] = f
-    }
-    o.on('--ruby-arg [ARG]', "Optional argument for ruby"){|a|
-      opt[:ruby_arg] = a
-    }
-    o.on('--rawdata-output [FILE]', 'output rawdata'){|r|
-      opt[:rawdata_output] = r
-    }
-    o.on('-v', '--verbose'){|v|
-      opt[:verbose] = v
-    }
-    o.on('-q', '--quiet', "Run without notify information except result table."){|q|
-      opt[:quiet] = q
-      opt[:verbose] = false
     }
   }
 
