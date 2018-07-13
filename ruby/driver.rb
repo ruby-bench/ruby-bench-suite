@@ -48,6 +48,7 @@ benchmarks.sort.each do |benchmark|
   ENV['BENCHMARK_TYPE_DIGEST'] = Digest::SHA2.file("#{File.dirname(__FILE__)}/benchmark/#{File.basename(benchmark)}").hexdigest
   ENV['BENCHMARK_TYPE_SCRIPT_URL'] = "https://raw.githubusercontent.com/ruby-bench/ruby-bench-suite/master/ruby/benchmark/#{File.basename(benchmark)}"
   ENV['RUBY_ENVIRONMENT'] = 'true'
+  ENV['LANG'] = 'C.UTF-8' # avoid invalid byte sequence
 
   command = [
     'benchmark-driver', benchmark, *execs, *filter,
