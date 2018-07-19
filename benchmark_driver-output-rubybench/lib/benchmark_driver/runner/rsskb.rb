@@ -70,15 +70,19 @@ class BenchmarkDriver::Runner::Rsskb
     )
 
     with_script(benchmark.render) do |path|
-      output = IO.popen(['/usr/bin/time', *context.executable.command, path], err: [:child, :out], &:read)
-      if $?.success?
-        match_data = /^(?<user>\d+.\d+)user\s+(?<system>\d+.\d+)system\s+(?<elapsed1>\d+):(?<elapsed2>\d+.\d+)elapsed.+\([^\s]+\s+(?<maxresident>\d+)maxresident\)k$/.match(output)
-        raise "Unexpected format given from /usr/bin/time:\n#{out}" unless match_data[:maxresident]
+      Tempfile.open(['rsskb-', '.txt']) do |f|
+        stdout = IO.popen(['/usr/bin/time', *context.executable.command, path], err: f.path, &:read)
+        stderr = File.read(f.path)
+        if $?.success?
+          match_data = /^(?<user>\d+.\d+)user\s+(?<system>\d+.\d+)system\s+(?<elapsed1>\d+):(?<elapsed2>\d+.\d+)elapsed.+\([^\s]+\s+(?<maxresident>\d+)maxresident\)k$/.match(stderr)
+          raise "Unexpected format given from /usr/bin/time:\n#{out}" unless match_data[:maxresident]
 
-        Integer(match_data[:maxresident])
-      else
-        $stdout.print(output)
-        BenchmarkDriver::Result::ERROR
+          Integer(match_data[:maxresident])
+        else
+          $stdout.print(stdout)
+          $stderr.print(stderr)
+          BenchmarkDriver::Result::ERROR
+        end
       end
     end
   end
