@@ -61,6 +61,13 @@ class PostsController < ActionController::Base
   end
 end
 
+Post.create!(
+  id: 1,
+  title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+  body: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+  author: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+)
+
 request = Rack::MockRequest.env_for(
   "http://localhost:3000/posts/1",
   method: 'GET',
