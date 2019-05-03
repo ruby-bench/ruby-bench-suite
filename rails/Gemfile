@@ -8,7 +8,7 @@ module ::Kernel
   def mysql2_prepared_statements?
     ENV["MYSQL2_PREPARED_STATEMENTS"] == '1'
   end
-  
+
   def v_4_0_x?
     major, minor, micro = ENV["RAILS_VERSION"].to_s.split(".")
     major == "4" && minor == "0"
@@ -47,4 +47,4 @@ gem 'benchmark-ips', '~> 2.2.0'
 gem 'em-hiredis', '~> 0.3.0'
 gem 'redis', '~> 3.0'
 gem 'faye-websocket', '~> 0.10.2'
-gem 'puma', '~> 2.16.0'
+gem 'puma', '~> 3.12.1'
