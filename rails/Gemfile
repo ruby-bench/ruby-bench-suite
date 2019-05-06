@@ -4,7 +4,7 @@ module ::Kernel
   def rails_master?
     ENV["RAILS_MASTER"] == '1'
   end
-  
+
   def skip_rails?
     ENV["SKIP_RAILS"] == '1'
   end
@@ -48,7 +48,5 @@ end
 
 gem 'pg', '0.18.1'
 gem 'benchmark-ips', '~> 2.2.0'
-gem 'em-hiredis', '~> 0.3.0'
 gem 'redis', '~> 3.0'
-gem 'faye-websocket', '~> 0.10.2'
 gem 'puma', '~> 3.12.1'
