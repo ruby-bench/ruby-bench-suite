@@ -299,9 +299,9 @@ begin
 
   environment = {}
   environment = environment.merge("timings" => @timings,
-                          "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
-                          "rss_kb" => mem["rss_kb"],
-                          "pss_kb" => mem["pss_kb"]).merge(facts)
+                                  "ruby-version" => "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL}",
+                                  "rss_kb" => mem["rss_kb"],
+                                  "pss_kb" => mem["pss_kb"]).merge(facts)
 
   if @unicorn
     child_pids = `ps --ppid #{pid} | awk '{ print $1; }' | grep -v PID`.split("\n")
