@@ -33,8 +33,8 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
   # @param [BenchmarkDriver::Metric] metric
   # @param [Hash{ BenchmarkDriver::Context => BenchmarkDriver::Result }] context_result
   def create_benchmark_run(job, metric, context_result)
-    http = Net::HTTP.new(ENV.fetch('API_URL', 'rubybench.org'), 443)
-    http.use_ssl = true
+    http = Net::HTTP.new(ENV.fetch('API_URL', 'rubybench.org'), ENV['API_PORT'] || 443)
+    http.use_ssl = ENV['API_NO_SSL'] != '1'
     request = Net::HTTP::Post.new('/benchmark_runs')
     request.basic_auth(ENV.fetch('API_NAME'), ENV.fetch('API_PASSWORD'))
 
