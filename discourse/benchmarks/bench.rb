@@ -346,7 +346,7 @@ begin
     elsif ENV['RUBY_VERSION']
       form_results["version"] = ENV['RUBY_VERSION']
     end
-  else if rails_benchmark
+  elsif rails_benchmark
     form_results["version"] = ENV['RAILS_VERSION']
   end
 
@@ -378,7 +378,7 @@ begin
       elsif ENV['RUBY_VERSION']
         form_results["version"] = ENV['RUBY_VERSION']
       end
-    else if rails_benchmark
+    elsif rails_benchmark
       form_results["version"] = ENV['RAILS_VERSION']
     end
 
