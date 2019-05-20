@@ -331,7 +331,8 @@ begin
   end
 
   puts "Posting memory results to Web UI...."
-  http = Net::HTTP.new(ENV['API_URL'] || 'rubybench.org')
+  http = Net::HTTP.new(ENV['API_URL'] || 'rubybench.org', ENV['API_PORT'] || 443)
+  http.use_ssl = ENV['API_NO_SSL'] != '1'
   request = Net::HTTP::Post.new('/benchmark_runs')
 
   form_results = {}
@@ -367,7 +368,8 @@ begin
 
   results.each do |category, result|
     puts "Posting results to Web UI...."
-    http = Net::HTTP.new(ENV['API_URL'] || 'rubybench.org')
+    http = Net::HTTP.new(ENV['API_URL'] || 'rubybench.org', ENV['API_PORT'] || 443)
+    http.use_ssl = ENV['API_NO_SSL'] != '1'
     request = Net::HTTP::Post.new('/benchmark_runs')
 
     form_results = {}
