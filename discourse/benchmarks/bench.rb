@@ -336,7 +336,10 @@ begin
   request = Net::HTTP::Post.new('/benchmark_runs')
 
   form_results = {}
-  form_results["benchmark_run[result][rss_kb]"] = mem
+
+  mem.each do |key, val|
+    form_results["benchmark_run[result][#{key}]"] = val
+  end
 
   rails_benchmark = ENV['RAILS_VERSION'] && ENV['RAILS_VERSION'].size > 0
   ruby_benchmark = !rails_benchmark
