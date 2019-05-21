@@ -331,16 +331,24 @@ begin
   end
 
   puts "Posting memory results to Web UI...."
-  http = Net::HTTP.new('rubybench.org')
+  http = Net::HTTP.new(ENV['API_URL'] || 'rubybench.org', ENV['API_PORT'] || 443)
+  http.use_ssl = ENV['API_NO_SSL'] != '1'
   request = Net::HTTP::Post.new('/benchmark_runs')
 
   form_results = {}
   form_results["benchmark_run[result][rss_kb]"] = mem
 
-  if ENV['RUBY_COMMIT_HASH']
-    form_results["commit_hash"] = ENV['RUBY_COMMIT_HASH']
-  elsif ENV['RUBY_VERSION']
-    form_results["version"] = ENV['RUBY_VERSION']
+  rails_benchmark = ENV['RAILS_VERSION'] && ENV['RAILS_VERSION'].size > 0
+  ruby_benchmark = !rails_benchmark
+
+  if ruby_benchmark
+    if ENV['RUBY_COMMIT_HASH']
+      form_results["commit_hash"] = ENV['RUBY_COMMIT_HASH']
+    elsif ENV['RUBY_VERSION']
+      form_results["version"] = ENV['RUBY_VERSION']
+    end
+  elsif rails_benchmark
+    form_results["version"] = ENV['RAILS_VERSION']
   end
 
   request.basic_auth(ENV["API_NAME"], ENV["API_PASSWORD"])
@@ -352,23 +360,28 @@ begin
     'benchmark_type[script_url]' => "https://raw.githubusercontent.com/discourse/discourse/#{ENV['DISCOURSE_COMMIT_HASH']}/script/bench.rb",
     'benchmark_type[digest]' => generate_digest,
     'benchmark_run[environment]' => environment.to_yaml,
-    'repo' => 'ruby',
-    'organization' => 'ruby'
+    'repo' => rails_benchmark ? 'rails' : 'ruby',
+    'organization' => rails_benchmark ? 'rails' : 'ruby'
   }.merge(form_results))
 
   http.request(request)
 
   results.each do |category, result|
     puts "Posting results to Web UI...."
-    http = Net::HTTP.new('rubybench.org')
+    http = Net::HTTP.new(ENV['API_URL'] || 'rubybench.org', ENV['API_PORT'] || 443)
+    http.use_ssl = ENV['API_NO_SSL'] != '1'
     request = Net::HTTP::Post.new('/benchmark_runs')
 
     form_results = {}
 
-    if ENV['RUBY_COMMIT_HASH']
-      form_results["commit_hash"] = ENV['RUBY_COMMIT_HASH']
-    elsif ENV['RUBY_VERSION']
-      form_results["version"] = ENV['RUBY_VERSION']
+    if ruby_benchmark
+      if ENV['RUBY_COMMIT_HASH']
+        form_results["commit_hash"] = ENV['RUBY_COMMIT_HASH']
+      elsif ENV['RUBY_VERSION']
+        form_results["version"] = ENV['RUBY_VERSION']
+      end
+    elsif rails_benchmark
+      form_results["version"] = ENV['RAILS_VERSION']
     end
 
     result.each do |key, value|
@@ -384,8 +397,8 @@ begin
       'benchmark_type[script_url]' => "https://raw.githubusercontent.com/discourse/discourse/#{ENV['DISCOURSE_COMMIT_HASH']}/script/bench.rb",
       'benchmark_type[digest]' => generate_digest,
       'benchmark_run[environment]' => environment.to_yaml,
-      'repo' => 'ruby',
-      'organization' => 'ruby'
+      'repo' => rails_benchmark ? 'rails' : 'ruby',
+      'organization' => rails_benchmark ? 'rails' : 'ruby'
     }.merge(form_results))
 
     http.request(request)
