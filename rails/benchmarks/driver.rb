@@ -155,7 +155,7 @@ class BenchmarkDriver
 
       @repeat_count.times do
         result = JSON.parse(`#{script}`)
-        puts "#{result["label"]} #{result["iterations_per_second"]}/ips"
+        puts "#{result["label"]} #{result["iterations_per_second"]}/ips #{result["total_allocated_objects_per_iteration"]} objects allocated"
         results << result
       end
 
