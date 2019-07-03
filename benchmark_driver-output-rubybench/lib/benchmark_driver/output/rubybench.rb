@@ -64,6 +64,7 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
       'benchmark_type[script_url]' => ENV.fetch('BENCHMARK_TYPE_SCRIPT_URL'),
       'benchmark_type[digest]' => ENV.fetch('BENCHMARK_TYPE_DIGEST'),
       'benchmark_run[environment]' => environment,
+      'benchmark_run[from_user]' => ENV['BENCHMARK_USER_SCRIPT'] == '1',
       'repo' => ENV.fetch('REPO_NAME'),
       'organization' => ENV.fetch('ORGANIZATION_NAME'),
     }.merge(initiator_hash).merge(result_hash))
