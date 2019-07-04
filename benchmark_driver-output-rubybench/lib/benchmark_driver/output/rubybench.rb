@@ -63,6 +63,7 @@ class BenchmarkDriver::Output::Rubybench < BenchmarkDriver::BulkOutput
       'benchmark_type[category]' => job.name,
       'benchmark_type[script_url]' => ENV.fetch('BENCHMARK_TYPE_SCRIPT_URL'),
       'benchmark_type[digest]' => ENV.fetch('BENCHMARK_TYPE_DIGEST'),
+      'benchmark_type[from_user]' => ENV['BENCHMARK_USER_SCRIPT'] == '1',
       'benchmark_run[environment]' => environment,
       'repo' => ENV.fetch('REPO_NAME'),
       'organization' => ENV.fetch('ORGANIZATION_NAME'),
