@@ -36,7 +36,7 @@ class BenchmarkDriver::Runner::Rsskb
 
     if jobs.any? { |job| job.loop_count.nil? }
       jobs = jobs.map do |job|
-        job.loop_count ? job : Job.new(job.to_h.merge(loop_count: 1))
+        job.loop_count ? job : Job.new(**job.to_h.merge(loop_count: 1))
       end
     end
 
