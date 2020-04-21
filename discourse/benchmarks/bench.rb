@@ -241,6 +241,7 @@ begin
 
   redirect_response = `curl -s -I "http://127.0.0.1:#{@port}/t/i-am-a-topic-used-for-perf-tests"`
   if redirect_response !~ /301 Moved Permanently/
+    puts redirect_response
     raise "Unable to locate topic for perf tests"
   end
 
@@ -258,7 +259,9 @@ begin
   tests.each do |_, path, headers_for_path|
     header_string = headers_for_path&.map { |k, v| "-H \"#{k}: #{v}\"" }&.join(" ")
 
-    if `curl -s -I "http://127.0.0.1:#{@port}#{path}" #{header_string}` !~ /200 OK/
+    response = `curl -s -I "http://127.0.0.1:#{@port}#{path}" #{header_string}`
+    if response !~ /200 OK/
+      puts response
       raise "#{path} returned non 200 response code"
     end
   end
